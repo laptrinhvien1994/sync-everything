@@ -1,0 +1,54 @@
+<html>
+	<head>
+	</head>
+	<body>
+		<input type="text" id="input" style="width: 100%;"/>
+		<input type="text" id="output" style="width: 100%;"/>
+		<button type="text" onclick="convert()">Convert</button>
+		<button type="text" onclick="convertAndCopy()">Convert & Copy</button>
+		<button type="text" onclick="clearInput()">Clear</button>
+		<button type="text" onclick="copyToClipBoard()">Copy</button>
+		<script type="text/javascript">
+		debugger;
+			window.convert = function(){
+				var element = document.getElementById('input');
+			    var str = element.value;
+			    str = str.toLowerCase();
+			    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g,"a"); 
+			    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g,"e"); 
+			    str = str.replace(/ì|í|ị|ỉ|ĩ/g,"i"); 
+			    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g,"o"); 
+			    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g,"u"); 
+			    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g,"y"); 
+			    str = str.replace(/đ/g,"d");
+			    str = str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
+			    str = str.replace(/ + /g," ");
+			    str = str.trim(); 
+			    var element2 = document.getElementById('output');
+			    var arr = str.split(" ");
+			    element2.value = arr.join("-");
+			}
+
+			window.clearInput = function(){
+				var element = document.getElementById('input');
+			    var element2 = document.getElementById('output');
+				element.value = '';
+				element2.value = '';
+			}
+			
+			window.copyToClipBoard = function(){
+				var element = document.getElementById('output');
+				element.select();
+				document.execCommand('copy');
+			}
+
+			window.convertAndCopy = function(){
+				window.convert();
+				window.copyToClipBoard();
+				setTimeout(()=>{
+					window.clearInput();
+				}, 100);
+			}
+		</script>
+	</body>
+</html>
