@@ -1,0 +1,1799 @@
+<ion-pane id="SunoPosCafe" ng-cloak>
+    <div class="bar bar-header item-input-inset bar-positive" style="overflow: visible">
+        <div class="col col-40">
+            <label class="item-input-wrapper search-label">
+                <autocomplete attr-id="suggestProduct" on-tap="tapInputSearch" attr-inputid="productSearchInput" ng-model="key" template-id="SuggestProductTemplate" attr-placeholder="Tìm hàng hóa (bằng tên hoặc mã hàng hóa)" on-select="pickProduct" is-android="isAndroid" on-type="getSearchResult" data="suggestproducts" on-search="onSearchField"></autocomplete>
+            </label>
+            <script type="text/x-angular-template" id="SuggestProductTemplate">
+                <ion-item suggestion class="item" ng-repeat="i in suggestions track by $index" id="p0-{{i.itemId}}" ng-class="{ active: ($index === selectedIndex) }" on-tap="onSelect(i)" index="{{ $index }}" val="{{suggestion}}" style="cursor: pointer;">
+                    <div>
+                        <h3>{{i.itemName}}</h3>
+                        <div>
+                            <span class="font14">x {{i.retailPrice | number}}</span>
+                            <span class="clearfix"></span>
+                        </div>
+                    </div>
+                </ion-item>
+            </script>
+        </div>
+        <div class="col col-60">
+            <div class="col col-60 left hidden-320" style="text-align: center;" ng-if="isInitialized && storesList.length > 0">
+                <button class="button button-clear font14 hidden-custom" on-tap="openLink('https://pos.suno.vn')" ng-show="isManager && !isIOS && !isIPad" style="overflow:hidden; height: 40px;"><b style="font-weight: 600">Quản lý</b></button>
+                <span style="overflow:hidden; line-height: 40px;" class="hidden-custom" ng-show="isManager && !isIOS && !isIPad"> | </span>
+                <button class="button button-clear font14" on-tap="openPopOverStoreList($event)" style="overflow:hidden; height: 40px;"><b style="font-weight: 600">{{currentStore.storeName}}</b></button>
+                <span style="overflow:hidden; line-height: 40px;" class="hidden-custom"> | </span>
+                <!--<button class="button button-clear font14 hidden-custom visible-700" on-tap="openStoreReport()" style="overflow:hidden;"><i class="font20 ion-ios-stats-bars"></i> <b>Báo cáo cuối ngày</b></button>-->
+                <button class="button button-clear font14 hidden-custom" on-tap="openStoreReport()" style="overflow:hidden; height: 40px;"><b style="font-weight: 600">Báo cáo</b></button>
+            </div>
+            <div class="col col-20 right height44" style="vertical-align: middle;">
+                <button class="user button button-clear font14 hidden-480" ng-show="isWebView" on-tap="openPopoverSettings($event)">
+                    <span>Xin chào, <i class="ion-ios-arrow-down"></i></span>
+                    <span class="ellipsis"><b style="font-weight: 600">{{userSession.displayName}}</b></span>
+                </button>
+                <button class="user button button-clear font14 visible-480" ng-show="false" on-tap="openPopoverSettings($event)">
+                    <span><i class="ion-chevron-down"></i></span>
+                </button>
+                <i ng-show="!isWebView" class="ion-android-menu" style="font-size: 35px; margin-top: 2px; cursor: pointer; float: right;" on-tap="openPopoverSettings($event)"></i>
+            </div>
+
+            <div class="col col-20 right hidden-700">
+                <button class="user button button-clear visible-" style="font-size: 14px; font-weight: bold;" on-tap="openSupportPopOver($event)">
+                    <i class="ion-ios-telephone"></i>
+                    <b style="font-weight: 600">
+                        Hỗ trợ kỹ thuật
+                        <span class="hidden-700-1279">02871.088.188</span>
+                    </b>
+                </button>
+                <!--<button class="user button button-clear visible-">
+                    Hỗ trợ kỹ thuật <b>02871.088.188</b>
+                </button>-->
+            </div>
+            <script type="text/ng-template" id="SupportPopOver">
+                <ion-popover-view>
+                    <ion-header-bar style="background-color: #0b87c9;">
+                        <h1 class="title" style="color: white;">Hỗ trợ kỹ thuật</h1>
+                        <button class="right button button-clear ion-close" style="color: white;" on-tap="closeSupportPopOver($event)"></button>
+                    </ion-header-bar>
+                    <ion-content>
+                        <p class="text-center" style="margin-top: 15px; font-weight: 600;">Khi có thắc mắc hoặc gặp sự cố trong quá trình sử dụng phần mềm, vui lòng gọi vào hotline <br /><span style="font-weight: bold; font-size: 18px;">02871.088.188</span><br /> để được hỗ trợ. Xin cảm ơn.</p>
+                        <p class="text-center" style="font-weight: 600;">Phiên bản: {{version}}</p>
+                    </ion-content>
+                </ion-popover-view>
+            </script>
+        </div>
+    </div>
+    <ion-content class="has-header hidden-320" delegate-handle="mainScroll" scroll='false' has-bouncing="false" overflow-scroll="true">
+        <div ng-if="!apiLoaded && errorArr.length == 0" class="loading-container visible active" style="position: absolute;top: -45px;"><div class="loading"><ion-spinner icon="ripple" class="spinner spinner-ripple"><svg viewBox="0 0 64 64"><g fill="none" fill-rule="evenodd" stroke-width="3"><circle cx="32" cy="32" r="18.9747"><animate attributeName="r" begin="0s" dur="2s" values="0;24" keyTimes="0;1" keySplines="0.1,0.2,0.3,1" calcMode="spline" repeatCount="indefinite"></animate><animate attributeName="stroke-opacity" begin="0s" dur="2s" values=".2;1;.2;0" repeatCount="indefinite"></animate></circle><circle cx="32" cy="32" r="23.9771"><animate attributeName="r" begin="-1s" dur="2s" values="0;24" keyTimes="0;1" keySplines="0.1,0.2,0.3,1" calcMode="spline" repeatCount="indefinite"></animate><animate attributeName="stroke-opacity" begin="-1s" dur="2s" values=".2;1;.2;0" repeatCount="indefinite"></animate></circle></g></svg></ion-spinner></div></div>
+        <div ng-show="isShowErrorRibbon" style="background-color: rgb(255, 76, 76); font-weight: 600; font-size: 12.5px; color: white; text-align: center; height: 28px; line-height: 28px; overflow: hidden;">{{errorArr[0].content}} <span on-tap="hideNotification()" style="background-color: white; color: black; font-size: 12px; padding: 2px 14px; border-radius: 2px; cursor: pointer;">Ẩn</span> hoặc <span on-tap="reloadApp()" style="background-color: white; color: black; font-size: 12px; padding: 2px 14px; border-radius: 2px; cursor: pointer;">Tải lại</span></div>
+        <div class="row">
+            <div class="col col-40" ng-show="!isInTable">
+                <div class="orders">
+                    <div class="orders-header-bar hide-on-keyboard-open">
+                        <div class="order-nav left">
+                            <button class="button button-outline button-positive button-small" ng-repeat="o in tableIsSelected.tableOrder track by $index" ng-class="{'active':$index == orderIndexIsSelected}" on-tap="changeOrder($index, o.saleOrder.uid)">
+                                #{{$index + 1}}
+                            </button>
+                        </div>
+                        <button class="button button-clear button-positive button-small" ng-show="tables.length > 0" on-tap="tableAction($event)">
+                            {{tableIsSelected.tableName}}
+                        </button>
+                        <button class="button button-small right" ng-show="tables.length > 1 && isInTable" on-tap="openTableTakeAway()" ng-class="{'button-assertive': tableIsSelected.tableId == 0,'button-energized' : tables[0].tableStatus == 1, 'button-stable' : tableIsSelected.tableId == 0 && tableIsSelected.tableStatus == 0}">Mang về</button>
+                        <button class="button button-stable button-small icon ion-ios-plus-empty right" style="border: 1px solid #e2e2e2;" on-tap="createNewOrder()"></button>
+                        <button class="button button-stable button-small icon ion-ios-minus-empty right" style="border: 1px solid #e2e2e2;" on-tap="cancelOrder()"></button>
+
+                    </div>
+                    <div class="padding createdby font14 overflow" ng-show="tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.orderDetails.length > 0">
+                        <p class="left no-margin"><i class="ion-person font20"></i> <span style="font-weight: 600;">{{tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.createdByName}}</span></p>
+                        <p class="right no-margin">Giờ vào: <span style="font-weight: bold;">{{tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.startTime | date:'HH:mm'}}</span></p>
+                    </div>
+                    <ion-scroll delegate-handle="orders-details" class="orders-details" ng-show="!showOrderDiscount" overflow-scroll="false">
+                        <ion-list class="orders-details" ng-show="!showOption">
+                            <ion-item style="cursor: pointer; overflow:visible;" class="item item-icon-left border-0px" ng-class="{ 'blu-dark': (i.isChild != null || i.isChild != undefined) && ($index != tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.lastInputedIndex), 'warning': $index == tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.lastInputedIndex }" ng-repeat="i in tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.orderDetails track by $index" on-tap="openItemOption(i,$index)">
+                                <div ng-if="i.isChild" style="position: absolute; top: -12px; right: -10px; width: 25px; height: 25px; z-index: 5; display: none;"><i class="ion-paperclip" style="font-size: 25px;"></i></div>
+                                <div ng-show="!i.isServiceItem">
+                                    <!--!i.timer && !i.endTime && !hourService.allProduct-->
+                                    <span class="icon qty" style="border: 0px solid green;" ng-show="i.newOrderCount==0" on-tap="changeQuantity(1,i,$event)">
+                                        <span ng-class="{ 'floating-number': isFloatNumber(i.quantity) }">{{i.quantity | roundQuantityIfFloating:2}}</span>
+                                    </span>
+                                    <span class="icon quantity" style="border: 0px solid black; cursor: pointer;" ng-show="i.newOrderCount>0" on-tap="changeQuantity(1,i,$event)">
+                                        <!--<span>
+                                            {{i.quantity | roundQuantityIfFloating:2}}
+                                            <span style="position: relative; top: 5px; left: 0px; padding: 0px 3px; font-size: 10px;" class="badge badge-assertive">{{i.newOrderCount}}</span>
+                                        </span>-->
+
+                                        <span class="qty" ng-class="{ 'floating-number': isFloatNumber(i.quantity) }">
+                                            <span ng-class="{ 'floating-number': isFloatNumber(i.quantity) }">{{i.quantity | roundQuantityIfFloating:2}}</span>
+                                        </span>
+                                        <span style="font-weight: bold;" class="font12 balanced">+{{i.newOrderCount | roundQuantityIfFloating:2}}</span>
+                                    </span>
+                                    <!-- Nút tăng giảm số lượng-->
+                                    <div class="updown-button" style="width: 26px; height: 48px; margin: 0px; border: 0px solid black; position: absolute;">
+                                        <!--<button on-tap="changeQuantity(1, i, $event)" style="margin-bottom: 4px; border: none; background-color:transparent; z-index: 1;"><i style="border-bottom: 1px solid black; padding-bottom: 2px;" class="ion-chevron-up"></i></button><br />-->
+                                        <!--<button on-tap="fastRemoveItem(1, i, $event)" style="background-color: transparent;border: none; z-index: 1;"><i class="ion-chevron-down"></i></button>-->
+                                        <button title="Tăng thêm 1" on-tap="changeQuantity(1, i, $event)" style="margin-bottom: 4px; border: none; background-color:transparent; z-index: 1;"><i style="padding-bottom: 2px; color: white; background-color: #0b87c9; padding: 0px 3px; border-radius: 3px;" class="ion-plus"></i></button><br />
+                                        <button title="Giảm đi 1" on-tap="fastRemoveItem(1, i, $event)" style="background-color: transparent;border: none; z-index: 1;"><i style="padding-bottom: 2px; color: white; background-color: #a7a7a7; padding: 0px 3px; border-radius: 3px;" class="ion-minus"></i></button>
+                                    </div>
+                                </div>
+                                <div ng-show="i.isServiceItem">
+                                    <!--i.timer || i.endTime || hourService.allProduct-->
+                                    <span class="icon">
+                                        <span><i class="ion-clock font30 positive"></i></span>
+                                        <span class="font12 balanced" style="font-weight: bold;" ng-show="i.newOrderCount>0"><br />+</span>
+                                    </span>
+                                </div>
+                                <div>
+                                    <h3>{{i.isChild}} {{i.itemName}}</h3>
+                                    <!-- Thêm nút hủy món -->
+                                    <button id="rm-item-btn" class="button-small button button-clear button-assertive right margin-left-10" style="border: 0px solid black;" on-tap="removeAll(i, $event)"><i class="font20 ion-android-close"></i></button>
+                                    <span class="detail-price right font14 assertive" ng-show="i.timer">Giờ vào {{i.startTime | date:'HH:mm' }}</span>
+
+                                    <span class="detail-price right font14" ng-show="!i.timer"><b>{{i.subTotal | number:0}}</b></span>
+
+                                    <div>
+                                        <span class="font14">
+                                            {{isWebView ? 'Giá ' : ''}}{{i.sellPrice | number}}
+                                            <span class="assertive font14" ng-show="i.discount > 0 && i.isDiscountPercent"> ({{isWebView ? 'đã giảm ' : '-'}}{{i.discountPercent | number}}%)</span>
+                                            <span class="assertive font14" ng-show="i.discount > 0 && !i.isDiscountPercent"> ({{isWebView ? 'đã giảm ' : '-'}}{{i.discount | number}})</span>
+                                        </span>
+
+                                        <!-- Hàng tính giờ  -->
+                                        <span class="w-btn-timer" ng-show="hourService.isUse && hourService.allProduct || i.isServiceItem">
+                                            <button id="start-btn" class="button-small button button-clear button-assertive" on-tap="startCounter(i,$event)" ng-show="!i.timer"><i class="font20" ng-class="{'ion-clock':!i.startTime,'ion-play':i.startTime}"></i></button>
+                                            <button id="stop-btn" class="button-small button button-clear button-assertive" on-tap="stopCounter(i,$event)" ng-show="i.timer"><i class="ion-pause font20"></i></button>
+                                        </span>
+                                        <span class="clearfix"></span>
+                                        <span class="assertive font14" ng-show="!i.timer && i.endTime">Vào {{i.startTime | date:'HH:mm'}} - Ra {{i.endTime | date:'HH:mm'}}</span>
+                                        <span ng-show="!i.timer" class="right font14 assertive">{{i.blockCount}}</span>
+                                    </div>
+                                </div>
+                                <div class="pin-btn" ng-show="!i.isChild && isUngroupItem && !i.isServiceItem" style="position: absolute; right: 0px;">
+                                    <button class="button-small button button-clear" ng-class="{'button-assertive': selectedItemIndex == $index && pinItem}" on-tap="pin(i,$index,$event)" title="Thêm tem/nhãn"><i class="ion-pin font20"></i></button>
+                                </div>
+                            </ion-item>
+                        </ion-list>
+                        <div class="item-option" ng-if="showOption">
+                            <ion-item class="item item-icon-left" on-tap="hideItemOption()">
+                                <div ng-show="!selectedItem.timer && !selectedItem.endTime" class="hide-on-keyboard-open">
+                                    <span class="icon" ng-show="selectedItem.newOrderCount==0" on-tap="changeQuantity(1,selectedItem)" ng-class="{'font20': getQuatityLength(p.quantity) > 2,'font16': getQuatityLength(p.quantity) > 3,'font14': getQuatityLength(p.quantity) > 5}">{{selectedItem.quantity}}</span>
+                                    <span class="icon quantity" ng-show="selectedItem.newOrderCount>0" on-tap="changeQuantity(1,selectedItem)" ng-class="{'font20': getQuatityLength(p.quantity) > 2,'font16': getQuatityLength(p.quantity) > 3,'font14': getQuatityLength(p.quantity) > 5}"><span>{{selectedItem.quantity | roundQuantityIfFloating:2}}</span> <span class="font14 balanced">+{{selectedItem.newOrderCount}}</span></span>
+                                </div>
+                                <div ng-show="selectedItem.timer || selectedItem.endTime" class="hide-on-keyboard-open">
+                                    <span class="icon">
+                                        <span><i class="ion-clock font30 balanced"></i></span>
+                                        <span class="font14 balanced" ng-show="selectedItem.newOrderCount>0"><br />+</span>
+                                    </span>
+                                </div>
+                                <div class="hide-on-keyboard-open">
+                                    <h3>{{selectedItem.itemName}}</h3>
+                                    <span class="detail-price right font14"><b>{{selectedItem.subTotal | number:0}}</b></span>
+                                    <div>
+                                        <span class="font14">
+                                            Giá {{selectedItem.unitPrice | number}}
+                                            <span class="assertive font14" ng-show="selectedItem.discount > 0 && selectedItem.isDiscountPercent "> ({{isWebView ? 'đã giảm ' : '-'}}{{selectedItem.discountPercent | number}}%)</span>
+                                            <span class="assertive font14" ng-show="selectedItem.discount > 0 && !selectedItem.isDiscountPercent"> ({{isWebView ? 'đã giảm ' : '-'}}{{selectedItem.discount | number}})</span>
+                                        </span>
+                                        <span class="clearfix"></span>
+                                    </div>
+                                </div>
+                            </ion-item>
+                            <div class="hide-item-action">
+                                <!-- <div class="row text-center border-bottom">
+                                  <button class="button button-assertive" on-tap="openChangeQuantity(1)" ng-hide="selectedItem.isServiceItem || hourService.allProduct && hourService.isUse && selectedItem.startTime"><i class="ion-minus-round"></i></button>
+                                  <input type="number" name="itemQuantity" ng-model="selectedItem.quantity" valid-number class="itemQuantity">
+                                  <button class="button button-calm" on-tap="openChangeQuantity(2)" ng-hide="selectedItem.isServiceItem || hourService.allProduct && hourService.isUse && selectedItem.startTime"><i class="ion-plus-round"></i></button>
+                                </div> -->
+                                <div class="col col-100">
+                                    <textarea class="item-cmt" ng-model="selectedItem.comment" placeholder="Ghi chú cho bếp"></textarea>
+                                </div>
+                                <div class="border-bottom col col-100" ng-show="settings.saleSetting.allowPriceModified && !showChangeQuantity && !showChangePrice">
+                                    <div class="col col-50 left">
+                                        <!--<ion-toggle ng-model="selectedItem.discountIsPercent" toggle-class="toggle-calm" ><span class="font14">Giảm giá ({{selectedItem.discountIsPercent?'%':'vnđ'}}</span>)</ion-toggle>-->
+                                        <ion-toggle ng-model="selectedItem.isDiscountPercent" toggle-class="toggle-calm"><span class="font14">Giảm giá ({{selectedItem.isDiscountPercent?'%':'vnđ'}}</span>)</ion-toggle>
+                                    </div>
+                                    <div class="col col-50 left discount-price">
+                                        <input type="number" ng-show="selectedItem.isDiscountPercent" ng-change="discountItem()" ng-model="selectedItem.discountPercent" placeholder="Nhập tỷ lệ" valid-number>
+                                        <input type="number" ng-show="!selectedItem.isDiscountPercent" ng-change="discountItem()" ng-model="selectedItem.discount" placeholder="Nhập số tiền" valid-number>
+                                    </div>
+                                </div>
+                                <div class="border-bottom col col-100" ng-show="showChangeQuantity">
+
+                                    <div class="col col-100 left discount-price text-center">
+                                        <span class="input-label left font14">{{showChangeQuantityOption == 1 ? 'Giảm số lượng' : showChangeQuantityOption == 2 ? 'Tăng số lượng' : 'Số lượng mới'}}</span>
+                                        <input type="number" ng-model="selectedItem.changeQuantity" placeholder="Nhập số lượng" min="0"  valid-number class="left">
+                                        <button class="button button-balanced button-clear button-small" on-tap="submitChangeQuantity(selectedItem.changeQuantity)">Hoàn tất</button>
+                                        <button class="button button-stable button-clear button-small" on-tap="closeChangeQuantity()">Hủy</button>
+                                    </div>
+                                </div>
+                                <div class="border-bottom col col-100" ng-show="showChangePrice">
+                                    <div class="col col-100 left discount-price text-center">
+                                        <input type="number" min="0" ng-model="newPrice" placeholder="Nhập giá bán mới" valid-number class="left">
+                                        <button class="button button-balanced button-clear button-small" on-tap="changeItemPrice(newPrice);newPrice=null;showChangePrice=false">Hoàn tất</button>
+                                        <button class="button button-stable button-clear button-small" on-tap="showChangePrice=false">Hủy</button>
+                                    </div>
+                                </div>
+                                <div class="col col-100 text-center">
+                                    <button class="button button-stable button-small" on-tap="closeChangeQuantity();hideItemOption()"><i class="ion-reply"></i> Trở về</button>
+                                    <button class="button button-assertive button-small" on-tap="removeItem(selectedItem.quantity)" ng-show="selectedItem.isServiceItem || hourService.allProduct && selectedItem.startTime"><i class="ion-ios-trash"></i> Xóa</button>
+                                    <button class="button button-assertive button-small" on-tap="openChangeQuantity(1)" ng-hide="selectedItem.isServiceItem || hourService.allProduct && hourService.isUse && selectedItem.startTime"><i class="ion-minus-round"></i></button>
+                                    <button class="button button-calm button-small" on-tap="openChangeQuantity(2)" ng-hide="selectedItem.isServiceItem || hourService.allProduct && hourService.isUse && selectedItem.startTime"><i class="ion-plus-round"></i></button>
+                                    <button class="button button-positive button-small hidden-480" on-tap="openChangeQuantity(3); showChangePrice = false" ng-hide="selectedItem.isServiceItem || hourService.allProduct && hourService.isUse && selectedItem.startTime">SL mới</button>
+                                    <button class="button button-balanced button-small" ng-show="settings.saleSetting.allowPriceModified" on-tap="showChangePrice = true; showChangeQuantity = false;"><i class="ion-social-usd"></i> Giá mới</button>
+                                </div>
+                            </div>
+                        </div>
+                    </ion-scroll>
+                    <!-- <div class="order-discount" style="width:100%;max-height:65vh;" ng-show="showOrderDiscount">
+                      <div class="order-discount-details">
+                        <div class="item">Tổng đơn hàng : {{tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.subTotal | number }}</div>
+                        <div class="item">Giảm giá : {{tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.discount | number }}</div>
+                      </div>
+
+                    </div> -->
+                    <div class="submit-order fix-bottom left-0 bg-positive" style="width:40%; border-top-right-radius: 23px !important; vertical-align: middle; background-color: #0b87c9" ng-show="!showOrderDetails">
+                        <button class="button button-full button-positive left submit-order-btn absolute" style="background-color: transparent;border: 0px; line-height: 100%;" ng-click="submitOrder(!printSetting.printSubmitOrder)">
+                            <div class="lable-price font20 relative ">Thanh toán</div>
+                            <div class="sub-price text-center" ng-show="tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.discount == 0">
+                                <span class="font30 margin-top-10 text-right">{{tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.total | number:0 }}</span>
+                                <!-- <span><s class="energized">{{tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.SubTotal | number }}</s></span> -->
+                            </div>
+                            <div class="sub-price text-center" ng-show="tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.discount > 0">
+                                <span class="font20">{{tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.total | number:0 }}</span>
+                                <span><s class="energized">{{tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.subTotal | number:0 }}</s></span>
+                            </div>
+                        </button>
+                        <div class="wrap-button more-submit-btn">
+                            <button class="button button-calm right padding openOrderDetails" style="border-top-right-radius: 20px !important; " on-tap="openOrderDetails()"><i class="ion-ios-list-outline font40"></i><span>Chi tiết</span></button>
+                            <button class="button button-energized right padding noticeToTheKitchen" on-tap="noticeToTheKitchen()"><i class="ion-ios-bell font40"></i><span>Báo bếp</span></button>
+                        </div>
+                    </div>
+                    <div class="submit-order left-0 bg-positive" style="width:100%; padding: 5px; position: fixed; bottom: 0; z-index:10; vertical-align: middle; background-color: #0b87c9" ng-show="showOrderDetails && !isMinHeight550px">
+                        <div class="text-center">
+                            <button class="button button-stable button-small" on-tap="closeOrderDetails()" style="font-weight: bold;"><i class="ion-reply"></i> Trở về</button>&nbsp;
+                            <button class="button button-calm button-small" on-tap="submitOrder(false)"  style="font-weight: bold;"><i class="ion-archive"></i>&nbsp;&nbsp;Lưu&nbsp;&nbsp;</button>&nbsp;
+                            <button class="button button-energized button-small" on-tap="submitOrder(true)"  style="font-weight: bold;"><i class="ion-ios-printer-outline"></i> Lưu và in</button>&nbsp;
+                            <button ng-show="printSetting.prePrint == false" class="button button-dark  button-small" on-tap="prePrint()"  style="font-weight: bold;"><i class="ion-ios-printer-outline"></i> In tạm</button>
+                        </div>
+                    </div>
+                    <!--<div class="bottom-bar">
+                        <span class="primary">
+                            <span id="noticeToKitchen"></span>
+                            <span id="orderDetails"></span>
+                        </span>
+                        <span class="total"></span>
+                        <span class="option"></span>
+                    </div>-->
+                </div>
+            </div>
+            <div class="col" style="padding:0;" ng-show="!showOrderDetails" ng-class="isInTable ? 'col-100' : 'col-60'">
+                <div class="right-content-header">
+                    <div class="menu-details-header-bar col col-100 left " ng-if="isInitialized">
+                        <button class="button button-stable button-small margin-left-10 hidden-xs" ng-show="isInTable" on-tap="filterTables('','')" ng-class="{'button-positive': buttonStatus == null}">
+                            Toàn bộ bàn
+                        </button>
+                        <button style="border: 1px solid #e2e2e2;" class="button button-stable button-small hidden-xs" on-tap="filterTables('status',1)" ng-class="{'button-positive': buttonStatus == 1}">
+                            Đang sử dụng
+                        </button>
+                        <button style="border: 1px solid #e2e2e2;" class="button button-stable button-small hidden-xs" on-tap="filterTables('status',0)" ng-class="{'button-positive': buttonStatus === 0}">
+                            Còn trống
+                        </button>
+                        <button class="button button-stable button-small hidden-xs" ng-show="isInTable" on-tap="openTableTakeAway()" ng-class="{'button-assertive': tableIsSelected.tableId == 0,'button-energized' : tables[0].tableStatus == 1, 'button-stable' : tableIsSelected.tableId == 0 && tableIsSelected.tableStatus == 0}">
+                            Mang về
+                        </button>
+
+                        <button class="button button-small button-stable right margin-left-10" style="padding:0;" ng-class="{'button-energized':showCategories}" on-tap="collapseSidebar()">
+                            <i ng-show="showCategories" class="ion-arrow-right-b font16"></i>
+                            <i ng-show="!showCategories" class="ion-arrow-left-b font16"></i>
+                        </button>
+                        <button class="button button-positive button-small right relative switch margin-left-10" on-tap="switchLayout(true)">
+                            <i ng-if="isInTable" class="ion-coffee"></i><i ng-if="!isInTable" class="ion-android-apps"></i> {{!isInTable?'SƠ ĐỒ BÀN':'THỰC ĐƠN'}}
+                        </button>
+                        <button class="button button-small button-clear right hidden-480" ng-show="isSync" title="Trạng thái kết nối đồng bộ">
+                            <i class="ion-record" ng-style="syncStatus == 'error' ? {'color': '#f15e5e', 'text-shadow' : '0 0 5px #e45c5c'} : syncStatus == 'warn' ? {'color': '#f9cd2c', 'text-shadow' : '0 0 5px #dcb218'} : {'color': '#2cf92c', 'text-shadow' : '0 0 5px #2cf92c'}"></i>
+                        </button>
+                        <button class="button button-small button-clear right hidden-1110" ng-if="isWebView">
+                            F7: {{ !onSearchField ? 'Tìm món' : isInTable ? 'Chọn bàn' : 'Chọn món' }}
+                        </button>
+                        <button class="button button-small button-clear right hidden-1110" ng-if="isWebView">
+                            F8: {{!isInTable?'Sơ đồ bàn':'Thực đơn'}}
+                        </button>
+                        <button class="button button-small button-clear right hidden-1110" ng-if="isWebView">
+                            F9: Báo bếp
+                        </button>
+                        <button class="button button-small button-clear right hidden-1110" ng-if="isWebView">
+                            F10: Thanh toán
+                        </button>
+                        <button class="button button-small button-clear right hidden-700 hidden-1110" ng-if="isWebView">
+                            F4: CT.HĐơn
+                        </button>
+                    </div>
+                </div>
+                <div class="right-content">
+                    <div class="menu-details-list left col" ng-show="!isInTable" ng-class="{'col-80':showCategories == true}">
+                        <ion-scroll delegate-handle="productItemList" class="right-content-height" id="buildHotKeyIndexInItemList">
+                            <div class="product-items text-center col relative col-custom-x2 ng-enter-stagger" ng-repeat="item in productItemList track by $index" id="p2-{{item.itemId}}">
+                                <img width="100" height="100" style="cursor: pointer;" ng-src="{{item.imageUrl != '' ? item.imageUrl +'/s':'https://pos.suno.vn/Content/themes/ace/img/no-image.png'}}" on-tap="pickProduct(item)" />
+                                <h4 class="product-title" style="cursor: pointer;" on-tap="pickProduct(item)">{{item.itemName | limitTo:30}}</h4>
+                                <p class="price" style="cursor: pointer;" on-tap="pickProduct(item)">{{item.retailPrice | number}}</p>
+                                <i class="ion-android-checkbox absolute icon-check-2 assertive" ng-if="item.itemId == ItemIsSelected.itemId"></i>
+                                <!-- <div ng-if="item.itemId == ItemIsSelected.itemId" class="w-selected"></div> -->
+                            </div>
+                            <div ng-if="productItemList.length == 0" class="font-size-20" style="line-height: 30px; margin-top: 20px; text-align: center;">Hiện tại chưa có hàng hóa nào{{selectedCategory}} để hiển thị, bạn vui lòng liên hệ quản lý để thêm hàng hóa.</div>
+                            <div ng-if="productItemList.length == 0 && !isIOS && !isIPad" class="font-size-15" style="text-align: center; margin-top: 30px; height: 40px;"><span style="font-weight:bold; color: #001a96" on-tap="openLink('https://pos.suno.vn')">Chọn vào đây</span> để chuyển nhanh sang trang thêm hàng hóa.</div>
+                        </ion-scroll>
+                    </div>
+                    <div class="menu-categories col col-20 left" ng-show="showCategories && !isInTable">
+                        <ion-scroll delegate-handle="menu-categories" class="right-content-height">
+                            <div class="list zone-list">
+                                <button class="button button-light button-full button-small" style="font-weight: bold; text-align:center;" on-tap="getProductItems('', '')" ng-class="{'button-suno': !currentCategory}">
+                                    MENU
+                                </button>
+                                <button class="button button-light button-full button-small" style="font-weight: bold;" ng-repeat="cat in categories track by cat.categoryId" on-tap="getProductItems(cat.categoryId, cat.categoryName)" ng-class="{'button-suno': currentCategory == cat.categoryId}">
+                                    {{cat.categoryName}}
+                                </button>
+                            </div>
+                        </ion-scroll>
+                    </div>
+                    <div class="table-list-details col left" ng-show="isInTable" ng-class="{'col-80':showCategories == true}">
+                        <ion-scroll delegate-handle="tables" class="right-content-height" id="buildHotKeyIndex" ng-class="appendedCSSClass">
+                            <div class="product-items table text-center col relative col-custom-x" ng-repeat="t in tables | filter:currentZone as filteredTable track by $index" on-tap="openTable(t)" id="p1-{{t.tableUuid}}" ng-show="t.tableIdInZone > 0 && isInitialized">
+                                <div class="w-table relative" ng-class="{'active' : t.tableStatus, 'bbt-color-1' : calcolor(t.tableZone.id+1) == 1,'bbt-color-2' : calcolor(t.tableZone.id+1) == 2,'bbt-color-3' : calcolor(t.tableZone.id+1) == 3,'bbt-color-4' : calcolor(t.tableZone.id+1) == 4,'bbt-color-5' : calcolor(t.tableZone.id+1) == 0}">
+                                    <p class="table-index">{{t.tableIdInZone}}</p>
+                                    <p class="start-time"></p>
+                                    <p class="table-zone font14">{{t.tableZone.zone | zoneName:8 }}</p>
+                                    <i class="ion-android-checkbox absolute icon-check assertive" ng-if="t.tableId == tableIsSelected.tableId"></i>
+                                    <!-- <div ng-if="t.tableId == tableIsSelected.tableId" class="w-selected-2"></div> -->
+                                </div>
+                                <!--<div style="position: absolute; top: 82px; left: 15px; height: 5px; border: 1px solid #72c671; background-color: #72c671; width: 80px;"></div>-->
+                            </div>
+                            <div ng-if="(filteredTable.length == 0) || (filteredTable.length == 1)" class="text-center" style="font-size: 17px;">{{(currentZone.tableStatus == 0 && (filteredTable.length == 0)) || (currentZone.tableStatus == 0 && filteredTable.length == 1 && !tables[0].tableStatus) ? 'HIỆN KHÔNG CÓ BÀN NÀO CÒN TRỐNG' : (currentZone.tableStatus == 1 && (filteredTable.length == 0)) || (currentZone.tableStatus == 1 && filteredTable.length == 1 && tables[0].tableStatus) ?  'HIỆN KHÔNG CÓ BÀN NÀO ĐANG SỬ DỤNG' : ''}}</div>
+                        </ion-scroll>
+                    </div>
+
+                    <div class="menu-categories col col-20 left" ng-show="showCategories && isInTable">
+                        <ion-scroll delegate-handle="zone" class="right-content-height">
+                            <div class="list zone-list" ng-show="tableMap.length > 0">
+                                <button class="button button-light button-full button-small" style="font-weight: bold; text-align:center;" on-tap="filterTables('','')" ng-class="{'button-suno': buttonStatus===null}">KHU VỰC</button>
+                                <button class="button button-light button-full button-small" style="font-weight: bold" ng-repeat="z in tableMap track by $index" on-tap="filterTables('zone',z)" ng-class="{'button-suno': buttonStatus == z , 'b-color-1' : calcolor($index+1) == 1,'b-color-2' : calcolor($index+1) == 2,'b-color-3' : calcolor($index+1) == 3,'b-color-4' : calcolor($index+1) == 4,'b-color-5' : calcolor($index+1) == 0}"> {{z.zone}}</button>
+                            </div>
+                        </ion-scroll>
+                    </div>
+                </div>
+            </div>
+            <div class="col col-60" ng-show="showOrderDetails">
+                <ion-scroll delegate-handle="add-customer-payment" class="right-content-height">
+                    <div class="add-customer-payment">
+                        <div class="search-customer" ng-show="!tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.customer">
+                            <label class="item item-input search-customer left">
+                                <i class="icon ion-search placeholder-icon"></i>
+                                <input type="text" ng-model="customerS.key" placeholder="Nhập Tên/SĐT hoặc Mã để tìm khách hàng" ng-enter="searchCustomer()" on-tap="tapCustomerSearch()" ng-change="searchCustomer()">
+                            </label>
+                            <button class="btn button btn-add-customer absolute button-clear button-positive icon ion-person-add" on-tap="openModalCreateCustomer()"></button>
+                            <div class="clearfix"></div>
+                        </div>
+                        <ion-item class="item border-top customer-item" ng-show="tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.customer">
+                            <h3><i class="ion-person positive font16"></i> {{tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.customer.customerName}} (Mã : {{tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.customer.code}}) <i class="ion-checkmark-round balanced"></i></h3>
+                            <p class="col"><i class="ion-ios-telephone positive font16"></i> {{tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.customer.phone}} - <i class="ion-ios-home positive font16"></i> {{tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.customer.address}}</p>
+                            <span ng-if="settings.saleSetting.applyEarningPoint" class="earning-point">Điểm tích lũy: <span>{{tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.customer.remainPoint}}</span></span>&nbsp;<span class="earning-point" ng-if="settings.saleSetting.applyEarningPoint" style="cursor:pointer;" title="Đổi điểm" on-tap="openEarningPointPopOver($event)">Đổi điểm <i class="ion-arrow-swap"></i></span>
+                            <button class="button button-clear button-assertive remote-customer" on-tap="removeCustomer()"><i class="ion-close"></i></button>
+                        </ion-item>
+                        <div class="customer-search-result" ng-show="sugUserList">
+                            <ion-scroll delegate-handle="searchUser" style="width:100%;max-height:84vh;">
+                                <ion-list>
+                                    <ion-item ng-repeat="item in searchUserList track by $index" class="item border-top" on-tap="addCustomer(item)">
+                                        <h3><i class="ion-person positive font16"></i> {{item.customerName}} (Mã : {{item.code}})</h3>
+                                        <p class="col"><i class="ion-ios-telephone positive font16"></i> {{item.phone}} - <i class="ion-ios-home positive font16"></i> {{item.address}}</p>
+                                    </ion-item>
+                                    <ion-item class="item no-margin-bottom-item border-top" ng-show="searchUserList.length == 0 && cusKey">
+                                        <p class="row">Không tìm thấy kết quả phù hợp</p>
+                                    </ion-item>
+                                </ion-list>
+                            </ion-scroll>
+                        </div>
+                        <div class="detail-prices col col-75 left">
+                            <div class="item-detail-prices padding-tb-20">
+                                <span class="detail">Hoá đơn : </span>
+                                <span class="detail">{{tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.subTotal | number }}</span>
+                            </div>
+                            <div class="item-detail-prices" ng-show="!tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.isPromotion">
+                                <div class="detail toogle-discount-lbs">
+                                    <ion-toggle ng-model="tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.isDiscountPercent" toggle-class="toggle-calm">
+                                        <span class="font14">Giảm giá ({{tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.isDiscountPercent ? '%':'vnđ'}})</span>
+                                    </ion-toggle>
+                                </div>
+                                <div class="detail input-discount">
+                                    <input type="number" ng-show="tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.isDiscountPercent" ng-change="discountOrder()" ng-model="tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.discountPercent" min="0" max="100" placeholder="Nhập tỷ lệ" valid-number>
+                                    <input type="number" ng-show="!tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.isDiscountPercent" ng-change="discountOrder()" ng-model="tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.discount" min="0" placeholder="Nhập số tiền" valid-number>
+                                </div>
+                            </div>
+                            <div class="item-detail-prices" ng-show="tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.isPromotion">
+                                <div class="detail toogle-discount-lbs" ng-show="settings.saleSetting.applyPromotion && tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.promotionOnBillSelected">
+                                    <span style="font-weight: bold; color: #0e59d1" title="Chương trình khuyến mãi đang áp dụng">{{tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.promotionOnBillSelected.promotionName}}</span>
+                                </div>
+                                <div class="detail input-discount" style="position:relative; top:-15px;" ng-show="tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.isPromotion && isManager">
+                                    <span style="vertical-align:bottom;" ng-show="tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.discount > 0">{{tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.discount | number:0}} </span>
+                                    <button class="button button-small button-balanced" title="Chương trình khuyến mãi" on-tap="openPromotionPopOver()">
+                                        <i class="icon ion-star"></i> <b>CTKM</b>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="item-detail-prices subfee">
+                                <div class="detail toogle-discount-lbs">
+                                    <ion-toggle ng-model="tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.isSubFeePercent" toggle-class="toggle-calm">
+                                        <span class="font14">Phụ thu ({{tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.isSubFeePercent ? '%':'vnđ'}})</span>
+                                    </ion-toggle>
+                                </div>
+                                <div class="detail input-subfee">
+                                    <input type="number" class="subfee-input right" ng-change="changeSubFee()" ng-show="tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.isSubFeePercent" ng-model="tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.subFeePercent" placeholder="Nhập tỷ lệ" valid-number>
+                                    <input type="number" class="subfee-input right" ng-change="changeSubFee()" ng-show="!tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.isSubFeePercent" ng-model="tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.subFee" placeholder="Nhập số tiền" valid-number>
+                                </div>
+                            </div>
+                            <div class="item-detail-prices" ng-show="tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.earningPointStatus == 1 && tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.exchangedMoney > 0">
+                                <span class="detail">Tiền quy đổi:</span>
+                                <span class="detail font16">{{tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.exchangedMoney | number }}</span>
+                            </div>
+                            <div class="item-detail-prices padding-tb-20">
+                                <span class="detail font16 energized"><b>Thanh toán : </b></span>
+                                <span class="detail font16 energized"><b>{{tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.total | number }}</b></span>
+                            </div>
+                            <div class="item-detail-prices">
+                                <span class="detail">Khách đưa : </span>
+                                <span class="detail input-amountPaid"><input type="number" min="0" ng-change="changeAmountPaid()" ng-model="tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.amountPaid"></span>
+                                <button class="button button-clear icon-right ion-card button-calm" on-tap="openPopOverPaymentMethod($event)"></button>
+                            </div>
+                            <div class="item-detail-prices" ng-show="receiptVoucher.length > 0">
+                                <span class="detail"></span>
+                                <span class="detail"><input type="number" ng-model="receiptVoucher[0].amount"></span>
+                                <button class="button button-clear button-small icon-right ion-chevron-down button-calm" on-tap="openPopOverPaymentMethod($event)">{{receiptVoucher[0].paymentMethodId == 1 ? 'Tiền mặt' : 'Thẻ'}}</button><button class="button button-small button-calm" on-tap="removePaymentMethod()"><i class="ion-minus"></i></button>
+                            </div>
+                            <div class="item-detail-prices" ng-show="tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.amountPaid > tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.total">
+                                <span class="detail">Tiền thừa : </span>
+                                <span class="detail">{{tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.amountPaid - tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.total  | number }}</span>
+                            </div>
+                            <div class="item-detail-prices" ng-show="(tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.amountPaid < tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.total) && !receiptVoucher[0].amount">
+                                <span class="detail">Còn nợ : </span>
+                                <!--<span class="detail">{{tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.total - tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.amountPaid  | number }}</span>-->
+                                <span class="detail">{{tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.total - tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.amountPaid  | number }}</span>
+                            </div>
+                        </div>
+                        <!-- <div class="order-note col col-40 left">
+                          <textarea placeholder="Ghi chú hoá đơn"></textarea>
+                        </div> -->
+                        <!-- <div class="addon-prices col col-25 left padding">
+                            <div class="display-none">
+                              <p class="left" style="line-height:22px;"><i class="ion-man font20"></i> Phục vụ :</p>
+                              <button class="button button-small button-assertive button-clear icon-right ion-chevron-down" on-tap="openPopOverSaleList($event)">{{tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.saleUser.displayName}}</button>
+                            </div>
+                        </div> -->
+                        <div class="clearfix space20"></div>
+                        <div class="text-center" ng-show="isMinHeight550px">
+                            <button class="button button-stable" on-tap="closeOrderDetails()"><i class="ion-reply"></i> Trở về</button>
+                            <button class="button button-calm" on-tap="submitOrder(false)"><i class="ion-archive"></i> Lưu</button>
+                            <button class="button button-energized" on-tap="submitOrder(true)"><i class="ion-ios-printer-outline"></i> Lưu và in</button>
+                            <button ng-show="printSetting.prePrint == false" class="button button-dark" on-tap="prePrint()"><i class="ion-ios-printer-outline"></i> In tạm</button>
+                        </div>
+
+                    </div>
+                </ion-scroll>
+            </div>
+        </div>
+    </ion-content>
+    <ion-content class="visible-320">
+        <div class="row">
+            <p class="text-center" style="margin-top: 150px; font-weight: bold; font-size: 18px; line-height: 30px;">Độ phân giải màn hình của thiết bị quá nhỏ, vui lòng xoay ngang màn hình hoặc sử dụng thiết bị có độ phân giải lớn hơn.</p>
+        </div>
+    </ion-content>
+</ion-pane>
+
+<script id="create-tables.html" type="text/ng-template">
+    <ion-modal-view>
+        <ion-header-bar class="bar-positive">
+            <h1 class="title">Sơ đồ bàn/phòng</h1>
+            <button class="right button button-clear ion-close" on-tap="closeCreateTableZone()"></button>
+        </ion-header-bar>
+        <ion-content class="padding080 tablemap">
+            <ion-scroll directon="y">
+                <div class="card" ng-show="tableMapTemp.length==0">
+                    <div class="item item-text-wrap font14 text-center">
+                        Chia quán của bạn thành các khu vực để phục vụ khách tốt hơn.<br />
+                        <!--Nếu quy mô quán không quá rộng, chỉ cần nhập số lượng bàn.<br/>-->
+                        <b>Hệ thống</b> sẽ tự tạo bàn <b style="color: rgb(255, 76, 76)">Mang về</b> nếu phòng bàn không được tạo.<br />
+                        <i style="font-style: italic;">Lưu ý: Nên đăng xuất tất cả các thiết bị khác trong quá trình tạo phòng bàn.</i>
+                    </div>
+                </div>
+                <div class="col col-100" ng-show="!showEditTable">
+                    <label class="item hidden-430 item-input margin5-0">
+                        <input type="text" placeholder="Nhập tên khu vực, ví dụ : Tầng 1" ng-model="modalCreateTables.zone">
+                    </label>
+                    <label class="item item-input col col-60 hidden-430 left margin5-0">
+                        <input type="text" placeholder="Số lượng bàn/phòng tại khu vực này, ví dụ : 7" ng-model="modalCreateTables.quantity" maxlength="3">
+                    </label>
+                    <ion-toggle ng-model="modalCreateTables.unit" toggle-class="toggle-calm" class="font14 col col-25 hidden-430">{{modalCreateTables.unit?'Phòng':'Bàn'}}</ion-toggle>
+                    <div class="clearfix"></div>
+                    <button class="button-full button button-calm hidden-430" on-tap="addTableZone(modalCreateTables.zone,modalCreateTables.quantity,modalCreateTables.unit)">Thêm khu vực</button>
+                    <div class="list card hidden-430" ng-if="tableMapTemp.length > 0">
+                        <div class="row" style="font-weight: bold; color: white; background-color: #0b87c9">
+                            <p class="col-custom-name-header margin-bottom-0px">&nbsp;&nbsp;Khu vực</p>
+                            <p class="col-custom-figure-header hidden-1110 margin-bottom-0px">Số lượng</p> <p class="col-custom-figure-header visible-1110 margin-bottom-0px" style="margin-bottom: 0px;">SL</p>
+                            <button class="button-small button-assertive button button-clear col-custom-remove-header margin-bottom-0px" style="margin-top: -5px; color: white;" on-tap="removeAllInitTableZone()" title="Xóa toàn bộ sơ đồ"><i class="ion-ios-trash font20"></i></button>
+                        </div>
+                        <ion-scroll delegate-handle="table-zone" style="width:100%; max-height:23vh;">
+                            <div class="row" style="margin-top: 0px;" ng-repeat="t in tableMapTemp track by $index">
+                                <div ng-if="t.isUpdating" class="col-custom-name margin-bottom-0px">
+                                    <label class="item-input-wrapper" style="border: 1px solid #cbcbcb; width: 95%">
+                                        <input type="text" placeholder="Tên khu vực" style="width: 95%" ng-model="t.zone">
+                                    </label>
+                                </div>
+                                <p ng-if="!t.isUpdating" class="col-custom-name margin-bottom-0px">&nbsp;&nbsp;{{t.zone}}</p>
+                                <div ng-if="t.isUpdating" class="col-custom-quantity margin-bottom-0px">
+                                    <label class="item-input-wrapper" style="border: 1px solid #cbcbcb; width: 95%;margin: 0px;">
+                                        <input type="text" placeholder="số lượng" style="width: 95%; text-align: center;" ng-model="t.quantity" maxlength="3">
+                                    </label>
+                                </div>
+                                <p ng-if="!t.isUpdating" class="col-custom-info margin-bottom-0px">{{t.quantity}} {{t.unit2 ? 'Phòng' : 'Bàn'}}</p>
+                                <div ng-if="t.isUpdating" class="col-custom-unit margin-bottom-0px inline-unit" style="text-align:center;">{{t.unit2 ? 'Phòng' : 'Bàn'}}</div>
+                                <div ng-if="t.isUpdating" class="col-custom-toggle margin-bottom-0px toggle-inline">
+                                    <ion-toggle ng-model="t.unit2" toggle-class="toggle-calm" class="font14 toggle-custom" style="padding-right: 40px;width: 30px; padding-left:10px" title="{{ t.unit2 ? 'Tắt' : 'Bật' }} để thay đổi sang {{ t.unit2 ? 'Bàn' : 'Phòng'}}"></ion-toggle>
+                                </div>
+                                <button ng-if="t.isUpdating" class="button-small button-balanced button button-clear col-custom-edit margin-bottom-0px" style="margin-top: -3px; padding-right: 0px;" on-tap="confirmTableZoneInitializing($index)"><i class="ion-checkmark-circled font20"></i></button>
+                                <button ng-if="!t.isUpdating" class="button-small button-positive button button-clear col-custom-edit margin-bottom-0px" style="margin-top: -5px;" on-tap="editTableZoneInitializing($index)"><i class="ion-edit font20"></i></button>
+                                <button ng-if="t.isUpdating" class="button-small button-assertive button button-clear col-custom-remove margin-bottom-0px" style="margin-top: -3px; padding-right: 0px;" on-tap="cancelTableZoneInitializing($index)"><i class="ion-close-circled font20"></i></button>
+                                <button ng-if="!t.isUpdating" class="button-small button-assertive button button-clear col-custom-remove margin-bottom-0px" style="margin-top: -5px;" on-tap="removeTableZoneInitializingTablesModal($index)"><i class="ion-ios-trash font20"></i></button>
+                            </div>
+                        </ion-scroll>
+                    </div>
+                    <button class="col col-50 button button-balanced hidden-430" style="margin: 0px auto;" ng-if="tableMapTemp.length > 0" on-tap="createTable()">Lưu sơ đồ bàn</button>
+                    <p class="show-430" style="text-align:center; font-weight: bold;">Độ phân giải màn hình của thiết bị quá nhỏ, vui lòng xoay ngang màn hình hoặc sử dụng thiết bị có độ phân giải lớn hơn.</p>
+                </div>
+
+                <!----------------------------------------------------------------------------->
+
+                <div class="col col-100" ng-show="showEditTable">
+                    <label class="item item-input margin5-0">
+                        <input type="text" placeholder="Nhập tên khu vực, ví dụ : Tầng 1" ng-model="selectedZone.zone">
+                    </label>
+                    <label class="item item-input col col-60 left margin5-0">
+                        <input type="text" placeholder="Số lượng bàn/phòng tại khu vực này, ví dụ : 7" ng-model="selectedZone.quantity" maxlength="3">
+                    </label>
+                    <ion-toggle ng-model="selectedZone.toogle" toggle-class="toggle-calm" class="font14 col col-25">{{selectedZone.toogle?'Phòng':'Bàn'}}</ion-toggle>
+                    <div class="clearfix"></div>
+                    <button class="button-full button button-positive" on-tap="saveChangeZone()">Thay đổi</button>
+                </div>
+            </ion-scroll>
+        </ion-content>
+    </ion-modal-view>
+</script>
+<script id="edit-tables.html" type="text/ng-template">
+    <ion-modal-view>
+        <ion-header-bar class="bar-positive">
+            <h1 class="title">Thay đổi sơ đồ bàn/phòng</h1>
+            <button class="right button button-clear ion-close" on-tap="closeEditTableZone()"></button>
+        </ion-header-bar>
+        <ion-content class="padding080 tablemap" ng-show="userSession.isAdmin == true">
+            <div class="col col-100" ng-show="!showEditTable">
+                <label class="item item-input margin5-0">
+                    <input type="text" placeholder="Nhập tên khu vực, ví dụ : Tầng 1" ng-model="modalEditTables.zone">
+                </label>
+                <label class="item item-input col col-60 left margin5-0">
+                    <input type="text" placeholder="Số lượng bàn/phòng tại khu vực này, ví dụ : 7" ng-model="modalEditTables.quantity" maxlength="3">
+                </label>
+                <ion-toggle ng-model="modalEditTables.unit" toggle-class="toggle-calm" class="font14 col col-25">{{modalEditTables.unit?'Phòng':'Bàn'}}</ion-toggle>
+                <div class="clearfix"></div>
+                <div class="text-center margin5-0"><button class="button button-full button-calm" on-tap="createTableZoneEditModal(modalEditTables.zone,modalEditTables.quantity,modalEditTables.unit)">Thêm khu vực</button></div>
+            </div>
+            <div class="col col-100" ng-show="showEditTable">
+                <label class="item item-input margin5-0">
+                    <input type="text" placeholder="Nhập tên khu vực, ví dụ : Tầng 1" ng-model="selectedZone.zone">
+                </label>
+                <label class="item item-input col col-60 left margin5-0">
+                    <input type="text" placeholder="Số lượng bàn/phòng tại khu vực này, ví dụ : 7" ng-model="selectedZone.quantity" maxlength="3">
+                </label>
+                <ion-toggle ng-model="selectedZone.toogle" toggle-class="toggle-calm" class="font14 col col-25">{{selectedZone.toogle?'Phòng':'Bàn'}}</ion-toggle>
+                <div class="clearfix"></div>
+
+                <div class="text-center margin5-0"><button class="button button-full button-calm" on-tap="saveChangeZone()">Lưu thay đổi</button></div>
+            </div>
+            <div class="col">
+                <div class="list card hidden-430">
+                    <div class="row" style="font-weight: bold; color: white; background-color: #0b87c9">
+                        <p class="col-custom-name-header margin-bottom-0px">&nbsp;&nbsp;Khu vực</p>
+                        <p class="col-custom-figure-header hidden-1110 margin-bottom-0px">Số lượng</p> <p class="col-custom-figure-header visible-1110 margin-bottom-0px" style="margin-bottom: 0px;">SL</p>
+                        <button class="button-small button-assertive button button-clear col-custom-remove-header margin-bottom-0px" style="margin-top: -5px; color: white;" on-tap="removeAllTableZone()" title="Xóa toàn bộ sơ đồ"><i class="ion-ios-trash font20"></i></button>
+                    </div>
+                    <ion-scroll delegate-handle="table-zone" style="width:100%;max-height:23vh;">
+                        <div class="row" ng-if="newTableMap.length == 0">
+                            <p class="col-100" style="text-align: center; font-weight: bold; margin-bottom: 0px;">Hiện chưa có khu vực nào.</p>
+                        </div>
+                        <div class="row" style="margin-top: 0px;" ng-repeat="t in newTableMapTemp track by $index">
+                            <div ng-if="t.isUpdating" class="col-custom-name margin-bottom-0px">
+                                <label class="item-input-wrapper" style="border: 1px solid #cbcbcb; width: 95%">
+                                    <input type="text" placeholder="Tên khu vực" style="width: 95%" ng-model="t.zone">
+                                </label>
+                            </div>
+                            <p ng-if="!t.isUpdating" class="col-custom-name margin-bottom-0px">&nbsp;&nbsp;{{t.zone}}</p>
+                            <div ng-if="t.isUpdating" class="col-custom-quantity margin-bottom-0px">
+                                <label class="item-input-wrapper" style="border: 1px solid #cbcbcb; width: 95%;margin: 0px;">
+                                    <input type="text" placeholder="số lượng" style="width: 95%; text-align: center;" ng-model="t.quantity" maxlength="3">
+                                </label>
+                            </div>
+                            <p ng-if="!t.isUpdating" class="col-custom-info margin-bottom-0px">{{t.quantity}} {{t.unit2 ? 'Phòng' : 'Bàn'}}</p>
+                            <div ng-if="t.isUpdating" class="col-custom-unit margin-bottom-0px inline-unit" style="text-align:center;">{{t.unit2 ? 'Phòng' : 'Bàn'}}</div>
+                            <div ng-if="t.isUpdating" class="col-custom-toggle margin-bottom-0px toggle-inline">
+                                <ion-toggle ng-model="t.unit2" toggle-class="toggle-calm" class="font14 toggle-custom" style="padding-right: 40px;width: 30px; padding-left:10px" title="{{ t.unit2 ? 'Tắt' : 'Bật' }} để thay đổi sang {{ t.unit2 ? 'Bàn' : 'Phòng'}}"></ion-toggle>
+                            </div>
+                            <button ng-if="t.isUpdating" class="button-small button-balanced button button-clear col-custom-edit margin-bottom-0px" style="margin-top: -3px; padding-right: 0px;" on-tap="confirmTableZoneEditing($index)"><i class="ion-checkmark-circled font20"></i></button>
+                            <button ng-if="!t.isUpdating" class="button-small button-positive button button-clear col-custom-edit margin-bottom-0px" style="margin-top: -5px;" on-tap="editTableZone($index)"><i class="ion-edit font20"></i></button>
+                            <button ng-if="t.isUpdating" class="button-small button-assertive button button-clear col-custom-remove margin-bottom-0px" style="margin-top: -3px; padding-right: 0px;" on-tap="cancelTableZoneEditing($index)"><i class="ion-close-circled font20"></i></button>
+                            <button ng-if="!t.isUpdating" class="button-small button-assertive button button-clear col-custom-remove margin-bottom-0px" style="margin-top: -5px;" on-tap="removeTableZoneEditTablesModal($index)"><i class="ion-ios-trash font20"></i></button>
+                        </div>
+                    </ion-scroll>
+                </div>
+                <p class="show-430" style="text-align:center; font-weight: bold;">Độ phân giải màn hình của thiết bị quá nhỏ, vui lòng xoay ngang màn hình hoặc sử dụng thiết bị có độ phân giải lớn hơn.</p>
+            </div>
+            <button class="button col col-50 button button-balanced" style="margin: 0px auto;" on-tap="updateTable()">Cập nhật sơ đồ</button>
+        </ion-content>
+    </ion-modal-view>
+</script>
+<script id="table-action.html" type="text/ng-template">
+    <ion-popover-view>
+        <ion-header-bar>
+            <h1 class="title">{{tableIsSelected.tableName}}</h1>
+        </ion-header-bar>
+        <ion-content>
+            <div class="list table-actions">
+                <a class="item item-icon-left font14" ng-if="tables.length > 1" href="#" on-tap="openModalSwitchTable()">
+                    <i class="icon ion-forward"></i>
+                    Đổi bàn
+                </a>
+                <a class="item item-icon-left font14" href="#" on-tap="openModalPairOrder()">
+                    <i class="icon ion-android-done-all"></i>
+                    Ghép hoá đơn
+                </a>
+                <a class="item item-icon-left font14" href="#" on-tap="openModalSplitOrder()">
+                    <i class="icon ion-code-working"></i>
+                    Tách hoá đơn
+                </a>
+                <a class="item item-icon-left font14" ng-if="isSync && canRename(tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder)" href="#" on-tap="openViewComment()">
+                    <i class="icon ion-clipboard"></i>
+                    Xem ghi chú
+                </a>
+                <a class="item item-icon-left font14" ng-if="isSync && hasNote(tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder)" href="#" on-tap="changeTempOrderName()">
+                    <i class="icon ion-arrow-swap"></i>
+                    Đổi tên
+                </a>
+            </div>
+        </ion-content>
+    </ion-popover-view>
+</script>
+<script id="switch-tables.html" type="text/ng-template">
+    <ion-modal-view>
+        <ion-header-bar class="bar bar-header bar-positive">
+            <h1 class="title">Đổi bàn</h1>
+            <button class="right button button-clear ion-close" on-tap="closeModalSwitchTable()"></button>
+        </ion-header-bar>
+        <ion-content>
+            <div class="table-list-details col left">
+                <div class="product-items table text-center col col-custom-x" ng-repeat="t in tables | filter :{tableStatus:'0'} track by $index" ng-show="{{t.tableIdInZone >0}}" on-tap="changeTable(t)">
+                    <div class="w-table" ng-class="{'active' : t.tableStatus, 'bbt-color-1' : calcolor(t.tableZone.id+1) == 1,'bbt-color-2' : calcolor(t.tableZone.id+1) == 2,'bbt-color-3' : calcolor(t.tableZone.id+1) == 3,'bbt-color-4' : calcolor(t.tableZone.id+1) == 4,'bbt-color-5' : calcolor(t.tableZone.id+1) == 0}">
+                        <p class="table-index">{{t.tableIdInZone}}</p>
+                        <p class="start-time"></p>
+                        <p class="table-zone font16">{{t.tableZone.zone | zoneName:8 }}</p>
+                    </div>
+                </div>
+            </div>
+        </ion-content>
+    </ion-modal-view>
+</script>
+<script id="pairing-order.html" type="text/ng-template">
+    <ion-modal-view>
+        <ion-header-bar class="bar bar-header bar-positive">
+            <h1 class="title">Ghép hoá đơn</h1>
+            <button class="right button button-clear ion-close" on-tap="closeModalPairOrder()"></button>
+        </ion-header-bar>
+        <ion-content>
+            <ion-scroll delegate-handle="pairing-tables" style="width:100%;height:80vh;" ng-show="selecteOrder">
+                <div class="table-list-details col left">
+                    <div class="product-items table text-center col col-custom-x" ng-repeat="t in tables | filter :{tableStatus:'1'} track by $index" ng-show="checkPairOrder(t)" on-tap="pairingOrder(t)">
+                        <div class="w-table" ng-class="{'active' : t.tableStatus, 'bbt-color-1' : calcolor(t.tableZone.id+1) == 1,'bbt-color-2' : calcolor(t.tableZone.id+1) == 2,'bbt-color-3' : calcolor(t.tableZone.id+1) == 3,'bbt-color-4' : calcolor(t.tableZone.id+1) == 4,'bbt-color-5' : calcolor(t.tableZone.id+1) == 0}">
+                            <p class="table-index">{{t.tableIdInZone}}</p>
+                            <p class="start-time"></p>
+                            <p class="table-zone font16" ng-show="t.tableId > 0">{{t.tableZone.zone | zoneName:8 }}</p>
+                            <p class="table-zone font16" ng-show="t.tableId == 0">Mang về</p>
+                        </div>
+                    </div>
+                </div>
+            </ion-scroll>
+            <div class="table-order-list wide-as-needed">
+                <ion-scroll delegate-handle="pairing-orders" direction="x">
+                    <div class="" style="width:300px;display:inline-block" ng-repeat="o in currentTablePair.tableOrder track by $index" ng-show="checkCurrentOrder($index)">
+                        <div class="card">
+                            <div class="item item-divider">
+                                Hoá đơn #{{$index + 1}}
+                            </div>
+                            <div class="item item-text-wrap">
+                                <ion-scroll delegate-handle="pairing-orders-{{$index}}" direction="y" style="width:100%;height:40vh;">
+                                    <ul class="list">
+                                        <li class="item" ng-repeat="i in o.saleOrder.orderDetails track by $index">
+                                            <span class="left quantity" ng-if="!i.isServiceItem">{{i.quantity}}</span>
+                                            <span class="left quantity" ng-if="i.isServiceItem"><i class="ion-clock"></i></span>
+                                            {{i.itemName}}
+                                        </li>
+                                    </ul>
+                                </ion-scroll>
+                            </div>
+                            <a class="button button-full button-positive" href="#" on-tap="Pair(o)">
+                                <i class="icon ion-android-done-all"></i>
+                                Ghép hoá đơn
+                            </a>
+                        </div>
+                    </div>
+                </ion-scroll>
+            </div>
+        </ion-content>
+    </ion-modal-view>
+</script>
+<script id="split-order.html" type="text/ng-template">
+    <ion-modal-view>
+        <ion-header-bar class="bar bar-header bar-positive">
+            <h1 class="title">Tách hoá đơn</h1>
+            <button class="right button button-clear ion-close" on-tap="closeModalSplitOrder()"></button>
+        </ion-header-bar>
+        <ion-content>
+            <div class="table-order-list wide-as-needed">
+                <ion-scroll delegate-handle="pairing-orders" direction="y" style="text-align: center;">
+                    <div class="col col-40" style="display:inline-block;margin-left: 5%;">
+                        <div class="card">
+                            <div class="item item-divider">
+                                Hoá đơn hiện tại
+                            </div>
+                            <div class="item item-text-wrap">
+                                <ion-scroll delegate-handle="current-order" direction="y" style="width:100%;height:40vh;">
+                                    <ul class="list">
+                                        <li class="item" style="cursor: pointer;" ng-repeat="i in leftOrder.orderDetails track by $index" ng-show="i.quantity > 0" on-tap="pickToSplitOrder(i)">
+                                            <!--<span class="left quantity" ng-if="!i.isChild">{{i.quantity}}</span>
+                                            {{i.isChild ? i.quantity : ''}}{{i.isChild}} {{i.itemName}}-->
+                                            <span ng-if="!i.isChild">
+                                                <span ng-if="!i.isServiceItem" class="left quantity">{{i.quantity}}</span>
+                                                <span ng-if="i.isServiceItem" class="ion-clock"></span>
+                                                {{i.itemName}}
+                                            </span>
+                                            <span ng-if="i.isChild" style="font-style:italic;">
+                                                {{i.isChild}}
+                                                <span ng-if="!i.isServiceItem">{{i.quantity}} x</span>
+                                                <span ng-if="i.isServiceItem" ng-class="ion-clock"></span>
+                                                {{i.itemName}}
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </ion-scroll>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="col col-10 font60 text-center" style="display:inline-block;position:relative;top:-30vh;">
+                      <i class="icon ion-share"></i>
+                    </div>-->
+                    <div class="col col-40" style="display:inline-block">
+                        <div class="card">
+                            <div class="item item-divider">
+                                Hoá đơn sẽ tách
+                            </div>
+                            <div class="item item-text-wrap">
+                                <ion-scroll delegate-handle="split-orders" direction="y" style="width:100%;height:40vh;">
+                                    <ul class="list">
+                                        <li class="item" style="cursor: pointer;" ng-repeat="i in rightOrder.orderDetails track by $index" on-tap="backToOrder(i)" ng-show="i.quantity > 0">
+                                            <!--<span class="left quantity">{{i.quantity}}</span>
+                                            {{i.itemName}}-->
+                                            <span ng-if="!i.isChild">
+                                                <span ng-if="!i.isServiceItem" class="left quantity">{{i.quantity}}</span>
+                                                <span ng-if="i.isServiceItem" class="ion-clock"></span>
+                                                {{i.itemName}}
+                                            </span>
+                                            <span ng-if="i.isChild" style="font-style:italic;">
+                                                {{i.isChild}}
+                                                <span ng-if="!i.isServiceItem">{{i.quantity}} x</span>
+                                                <span ng-if="i.isServiceItem" ng-class="ion-clock"></span>
+                                                {{i.itemName}}
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </ion-scroll>
+                            </div>
+                        </div>
+                    </div>
+                </ion-scroll>
+                <div class="text-center">
+                    <button class="button button-stable" on-tap="cancelSplit()"><i class="ion-close"></i> Huỷ thao tác</button>
+                    <button class="button button-calm" on-tap="Split()"><i class="ion-code-working"></i> Tách hoá đơn</button>
+                </div>
+            </div>
+        </ion-content>
+    </ion-modal-view>
+</script>
+<script id="edit-item.html" type="text/ng-template">
+    <ion-modal-view>
+        <ion-header-bar class="bar bar-header bar-positive">
+            <h1 class="title">{{modalEditItem.item.itemName}}</h1>
+        </ion-header-bar>
+        <ion-content>
+            <div class="col col-50 left">
+                <div class="card" ng-show="!pickItem.isSerial">
+                    <div class="item-text-wrap">
+                        <div class="item-input-inset input-number">
+                            <label class="item-input-wrapper col col-50 font40">
+                                {{modalEditItem.item.quantity}}
+                            </label>
+                            <div class="col col-50">
+                                <button class="button ion-chevron-left button-light button-clear font30" ng-show="modalEditItem.item.quantity > 1" on-tap="changeQuantity(-1)"></button>
+                                <button class="button ion-chevron-right button-light button-clear font30" on-tap="changeQuantity(1)"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card" ng-if="settings.saleSetting.allowPriceModified">
+                    <div class="item-text-wrap">
+                        <div class="no-margin-bottom-item">
+                            <ion-toggle ng-model="modal.discMethod" toggle-class="toggle-calm" ng-change="change_method_discount_item()">
+                                <span class="font14">Giảm giá ({{modal.discMethod?'vnđ':'%'}})</span>
+                            </ion-toggle>
+
+                            <label class="item-input">
+                                <input type="number" ng-model="modal.discValue" placeholder="{{modal.discMethod?'Nhập số tiền':'Nhập tỷ lệ'}}" ng-change="check_discount_item()" valid-number>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col col-40 left">
+                <div class="card">
+                    <div class="item item-text-wrap">
+
+                    </div>
+                </div>
+            </div>
+        </ion-content>
+    </ion-modal-view>
+</script>
+<script id="paymentmethod.html" type="text/ng-template">
+    <ion-popover-view>
+        <ion-header-bar>
+            <h1 class="title">Phương thức thanh toán</h1>
+        </ion-header-bar>
+        <ion-content>
+            <ion-scroll direction="y">
+                <div class="row">
+                    <div class="col col-40">
+                        Tiền mặt<input type="number" min="0" ng-change="changeAmountReceiptVoucher(0)" ng-model="tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.receiptVouchers[0].amount" min="0" style="border-bottom: 1px solid #c1c1c1" placeholder="Tiền mặt" valid-number />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-40">
+                        Thẻ<input type="number" min="0" ng-change="changeAmountReceiptVoucher(1)" ng-model="tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.receiptVouchers[1].amount" min="0" style="border-bottom: 1px solid #c1c1c1" placeholder="Thẻ" valid-number />
+                    </div>
+                </div>
+            </ion-scroll>
+        </ion-content>
+    </ion-popover-view>
+</script>
+<script id="store-list.html" type="text/ng-template">
+    <ion-popover-view>
+        <ion-header-bar>
+            <h1 class="title">Cửa hàng</h1>
+        </ion-header-bar>
+        <ion-content>
+            <div class="list table-actions">
+                <a class="item item-icon-left" ng-repeat="s in storesList | orderBy: 'storeID' track by $index" on-tap="changeCurrentStore(s)">
+                    <i class="icon ion-ios-location-outline"></i> {{s.storeName}}
+                </a>
+            </div>
+        </ion-content>
+    </ion-popover-view>
+</script>
+<script id="create-new-customer.html" type="text/ng-template">
+    <ion-modal-view>
+        <ion-header-bar class="bar bar-header bar-positive">
+            <h1 class="title">Thêm khách hàng mới</h1>
+            <button class="right button button-clear ion-close" on-tap="closeModalCreateCustomer()"></button>
+        </ion-header-bar>
+        <ion-content>
+            <ion-scroll direction="y">
+                <div class="col">
+                    <div class="list col col-50 left">
+                        <label class="item item-input item-stacked-label">
+                            <span class="input-label">Tên khách hàng</span>
+                            <input type="text" placeholder="Nguyễn Văn A" ng-model="customer.name">
+                        </label>
+                        <label class="item item-input item-stacked-label">
+                            <span class="input-label">Số điện thoại</span>
+                            <input type="tel" placeholder="Nhập số điên thoại" ng-model="customer.phone">
+                        </label>
+                        <label class="item item-input item-stacked-label">
+                            <span class="input-label">Địa chỉ</span>
+                            <input type="text" placeholder="" ng-model="customer.address">
+                        </label>
+                        <label class="item item-input item-stacked-label genn">
+                            <ion-list>
+                                <span class="input-label">Giới tính</span>
+                                <ion-radio ng-model="customer.gender" ng-value="'true'" selected>Nam</ion-radio>
+                                <ion-radio ng-model="customer.gender" ng-value="false">Nữ</ion-radio>
+                            </ion-list>
+                        </label>
+                    </div>
+                    <div class="list col col-50 left">
+                        <label class="item item-input item-stacked-label">
+                            <span class="input-label">Mã khách hàng</span>
+                            <input type="text" placeholder="Hệ thống tự sinh nếu để trống" ng-model="customer.code">
+                        </label>
+                        <label class="item item-input item-stacked-label">
+                            <span class="input-label">Email</span>
+                            <input type="email" placeholder="" ng-model="customer.email">
+                        </label>
+                        <label class="item item-input item-stacked-label">
+                            <span class="input-label">Ghi chú</span>
+                            <input type="text" placeholder="" ng-model="customer.description">
+                        </label>
+                        <label class="item item-input item-stacked-label">
+                            <span class="input-label">Sinh nhật</span>
+                            <input type="date" ng-model="customer.birthday">
+                        </label>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="col text-center">
+                    <button class="button button-stable" on-tap="closeModalCustomer()"><i class="ion-close"></i> Trở về</button>
+                    <button class="button button-positive" on-tap="saveCustomer(customer)"><i class="ion-checkmark-round"></i> Lưu</button>
+                </div>
+            </ion-scroll>
+        </ion-content>
+    </ion-modal-view>
+</script>
+<script id="settings.html" type="text/ng-template">
+    <ion-popover-view style="border: none; height: auto !important;">
+        <ion-content id="setting-popover" style="margin: 0px;">
+            <div class="list table-actions list-action">
+                <a class="item item-icon-left font14" ng-show="apiLoaded" on-tap="openStoreReport()">
+                    <i class="icon ion-stats-bars"></i> Báo cáo cuối ngày
+                </a>
+                <a class="item item-icon-left font14" ng-show="isManager && apiLoaded" on-tap="endSession()">
+                    <i class="icon ion-ios-loop-strong"></i> Kết ca
+                </a>
+                <a class="item item-icon-left font14" ng-show="!apiLoaded && !isWebView" on-tap="reloadApp()">
+                    <i class="icon ion-ios-loop-strong"></i> Làm mới
+                </a>
+                <a class="item item-icon-left font14" ng-if="userSession.isAdmin == true && apiLoaded" on-tap="openEditTablesModal()">
+                    <i class="icon ion-ios-keypad"></i> Sơ đồ bàn / phòng
+                </a>
+                <a class="item item-icon-left font14" on-tap="showSyncSetting()" ng-show="isManager && apiLoaded">
+                    <i class="icon ion-clock"></i> Dịch vụ tính theo giờ
+                </a>
+                <a class="item item-icon-left font14" ng-show="apiLoaded" on-tap="showSetting()">
+                    <i class="icon ion-ios-cog"></i> Thiết lập
+                </a>
+                <a class="item item-icon-left font14" ng-show="isManager && isWebView" on-tap="openLink('https://pos.suno.vn')">
+                    <i class="icon ion-android-options"></i> Quản lý
+                </a>
+                <a class="item item-icon-left font14" ng-show="!isWebView" on-tap="viewProfile()">
+                    <i class="icon ion-android-person"></i> Tài khoản
+                </a>
+                <a class="item item-icon-left font14" on-tap="logout()">
+                    <i class="icon ion-log-out"></i> Đăng xuất
+                </a>
+            </div>
+        </ion-content>
+    </ion-popover-view>
+</script>
+
+<script id="print-setting.html" type="text/ng-template">
+    <ion-modal-view>
+        <ion-header-bar class="bar bar-header bar-positive">
+            <h1 class="title">Thiết lập</h1>
+            <button class="right button button-clear ion-close" on-tap="closeSetting()"></button>
+        </ion-header-bar>
+        <ion-content style="overflow: auto;">
+            <div class="row">
+                <button ng-show="isManager" class="button button-small button-positive button-outline" ng-class="{'active':tabPrintSetting==1}" on-tap="tabPrintSetting=1"><i class="ion-ios-cog font20"></i> Thiết lập chung</button>
+                <button ng-show="!isWebView && isManager" class="button button-small button-positive button-outline margin-left-10" ng-class="{'active':tabPrintSetting==2}" on-tap="tabPrintSetting=2"><i class="ion-ios-printer font20"></i> Thiết lập máy in</button>
+                <button ng-show="userSession.isAdmin == true" class="button button-small button-positive button-outline margin-left-10" ng-class="{'active':tabPrintSetting==3}" on-tap="tabPrintSetting=3"><i class="ion-iphone font20"></i> Thiết lập đồng bộ</button>
+                <button ng-show="userSession.isAdmin == true" class="button button-small button-positive button-outline margin-left-10" ng-class="{'active':tabPrintSetting==4}" on-tap="tabPrintSetting=4"><i class="ion-ios-compose font20"></i> Thiết lập hủy món</button>
+                <button ng-show="isManager && printSetting.unGroupBarKitchen" class="button button-small button-positive button-outline margin-left-10" ng-class="{'active':tabPrintSetting==5}" on-tap="tabPrintSetting=5"><i class="ion-ios-compose font20"></i>Menu bar</button>
+                <button ng-show="isWebView" class="button button-small button-positive button-outline margin-left-10" ng-class="{'active':tabPrintSetting==6}" on-tap="tabPrintSetting=6"><i class="ion-archive font20"></i> Thiết lập in nhờ</button>
+            </div>
+            <div class="custom-tab-content" id="tab-1" ng-show="tabPrintSetting == 1">
+                <ul class="list">
+                    <li class="item item-checkbox checkbox-energized" ng-show="isManager">
+                        Không in hóa đơn khi thanh toán nhanh
+                        <label class="checkbox">
+                            <input type="checkbox" ng-model="printSetting.printSubmitOrder">
+                        </label>
+                    </li>
+                    <li class="item item-checkbox checkbox-energized" ng-show="isManager">
+                        Không in phiếu khi báo bếp
+                        <label class="checkbox">
+                            <input type="checkbox" ng-model="printSetting.printNoticeKitchen">
+                        </label>
+                    </li>
+                    <li class="item item-checkbox checkbox-energized" ng-show="isManager">
+                        Nhận thông báo từ hệ thống
+                        <label class="checkbox">
+                            <input type="checkbox" ng-model="printSetting.acceptSysMessage">
+                        </label>
+                    </li>
+                    <li class="item item-checkbox checkbox-energized" ng-show="isManager">
+                        Không cho phép nhân viên in hóa đơn tạm tính.
+                        <label class="checkbox">
+                            <input type="checkbox" ng-model="printSetting.prePrint">
+                        </label>
+                    </li>
+                    <li class="item item-checkbox checkbox-energized" ng-show="isManager">
+                        Tách riêng hóa đơn cho bar và bếp
+                        <label class="checkbox">
+                            <input type="checkbox" ng-model="printSetting.unGroupBarKitchen">
+                        </label>
+                    </li>
+                    <li class="item item-checkbox checkbox-energized" ng-show="isManager">
+                        Tách riêng từng món trong hóa đơn
+                        <label class="checkbox">
+                            <input type="checkbox" ng-model="printSetting.unGroupItem">
+                        </label>
+                    </li>
+                    <li class="item item-checkbox checkbox-energized" ng-show="isManager && printSetting.unGroupItem">
+                        In tem nhãn khi báo bếp
+                        <label class="checkbox">
+                            <input type="checkbox" ng-model="printSetting.noticeByStamps">
+                        </label>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+
+                <div class="col text-center">
+                    <button class="button button-positive button-full" on-tap="savePrintSetting(printSetting)">Lưu thiết lập</button>
+                </div>
+            </div>
+            <div class="custom-tab-content" id="tab-2" ng-show="tabPrintSetting == 2">
+                <div class="card">
+                    <div class="item item-divider">
+                        Thiết lập in bếp
+                    </div>
+                    <div class="item item-text-wrap">
+                        <div class="list">
+                            <ion-toggle ng-model="printDevice.kitchenPrinter.status" toggle-class="toggle-calm" class="">{{printDevice.kitchenPrinter.status ? 'In trực tiếp' : 'In thông qua máy tính'}}</ion-toggle>
+                            <label class="item item-input item-select block-times" ng-show="printDevice.kitchenPrinter.status">
+                                <div class="input-label">
+                                    Chọn máy in
+                                </div>
+                                <select ng-model="printDevice.kitchenPrinter.printer" ng-change="selectPrinter(printDevice.kitchenPrinter.printer)">
+                                    <option value="1">Bixolon</option>
+                                    <option value="2">Fujitsu</option>
+                                </select>
+                            </label>
+                            <label class="item item-input" ng-show="printDevice.kitchenPrinter.status">
+                                <input type="text" placeholder="Nhập IP máy in" ng-model="printDevice.kitchenPrinter.ip">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" ng-if="printSetting.unGroupBarKitchen">
+                    <div class="item item-divider">
+                        Thiết lập in quầy bar
+                    </div>
+                    <div class="item item-text-wrap">
+                        <div class="list">
+                            <ion-toggle ng-model="printDevice.barPrinter.status" toggle-class="toggle-calm" class="">{{printDevice.barPrinter.status ? 'In trực tiếp' : 'In thông qua máy tính'}}</ion-toggle>
+                            <label class="item item-input item-select block-times" ng-show="printDevice.barPrinter.status">
+                                <div class="input-label">
+                                    Chọn máy in
+                                </div>
+                                <select ng-model="printDevice.barPrinter.printer" ng-change="selectPrinter(printDevice.barPrinter.printer)">
+                                    <option value="1">Bixolon</option>
+                                    <option value="2">Fujitsu</option>
+                                </select>
+                            </label>
+                            <label class="item item-input" ng-show="printDevice.barPrinter.status">
+                                <input type="text" placeholder="Nhập IP máy in" ng-model="printDevice.barPrinter.ip">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="item item-divider">
+                        Thiết lập in hóa đơn thanh toán
+                    </div>
+                    <div class="item item-text-wrap">
+                        <!-- <div class="list">
+                          <ion-toggle ng-model="printDevice.cashierPrinter.status" toggle-class="toggle-calm" class="">{{printDevice.cashierPrinter.status ? 'In trực tiếp' : 'In thông qua máy tính'}}</ion-toggle>
+                          <label class="item item-input" ng-show="printDevice.cashierPrinter.status">
+                            <input type="text" placeholder="Nhập IP máy in" ng-model="printDevice.cashierPrinter.ip">
+                          </label>
+                        </div> -->
+                        <div class="list">
+                            <ion-toggle ng-model="printDevice.cashierPrinter.status" toggle-class="toggle-calm" class="">{{printDevice.cashierPrinter.status ? 'In trực tiếp' : 'In thông qua máy tính'}}</ion-toggle>
+                            <label class="item item-input item-select block-times" ng-show="printDevice.cashierPrinter.status">
+                                <div class="input-label">
+                                    Chọn máy in
+                                </div>
+                                <select ng-model="printDevice.cashierPrinter.printer" ng-change="selectPrinter(printDevice.cashierPrinter.printer)">
+                                    <option value="1">Bixolon</option>
+                                    <option value="2">Fujitsu</option>
+                                </select>
+                            </label>
+                            <label class="item item-input" ng-show="printDevice.cashierPrinter.status">
+                                <input type="text" placeholder="Nhập IP máy in" ng-model="printDevice.cashierPrinter.ip">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col text-center" ng-class="{'padding-top-20': !directPriter}">
+                    <button class="button button-positive button-full" on-tap="savePrinterInfo(printDevice)">Lưu thiết lập</button>
+                </div>
+            </div>
+            <div class="custom-tab-content" id="tab-3" ng-show="tabPrintSetting == 3">
+                <div class="padding">
+                    <div class="card">
+                        <div class="item item-text-wrap font14 text-center">
+                            Sử dụng tính năng đồng bộ khi bạn bán hàng trên nhiều thiết bị khác nhau, nhân viên có thể tiếp nhận order của khách từ thiết bị di động, đơn hàng tự động chuyển về quầy thu ngân.
+                        </div>
+                    </div>
+                    <div class="row checksync">
+                        <ion-toggle ng-model="isSync" ng-change="updateSyncSetting(isSync)" toggle-class="toggle-calm">Đồng bộ đơn hàng trên nhiều thiết bị</ion-toggle>
+                    </div>
+                </div>
+            </div>
+            <div class="custom-tab-content" id="tab-4" ng-show="tabPrintSetting == 4">
+                <ion-list>
+                    <ion-radio ng-model="removeSetting" ng-value="1">Cho phép hủy món không cần xác nhận.</ion-radio>
+                    <ion-radio ng-model="removeSetting" ng-value="2">Cho phép huỷ món khi chưa in bếp, khi đã in bếp thì cần xác nhận của quản lý/chủ cửa hàng</ion-radio>
+                    <ion-radio ng-model="removeSetting" ng-value="3">Chỉ được hủy món khi có xác nhận của quản lý/chủ cửa hàng</ion-radio>
+                    <ion-radio ng-model="removeSetting" ng-value="4">Chỉ được hủy món khi có xác nhận của chủ cửa hàng</ion-radio>
+                </ion-list>
+                <div class="clearfix"></div>
+                <div class="col text-center">
+                    <!-- <button class="button button-stable" on-tap="closeRemoveItemSetting()"><i class="ion-close"></i> Trở về</button> -->
+                    <button class="button button-full button-positive" on-tap="saveRemoveItemSetting(removeSetting)"><i class="ion-checkmark-round"></i> Lưu thiết lập</button>
+                </div>
+            </div>
+            <div class="custom-tab-content" id="tab-5" ng-show="tabPrintSetting == 5">
+                <div class="card">
+                    <div class="item item-divider">
+                        Chọn món cho quầy bar
+                        <span class="right">Đã chọn: {{BarItemSetting ? BarItemSetting.length : 0}} món</span>
+                        <span ng-if="isWebView" class="right" style="padding-right: 10px; cursor:pointer;" on-tap="clearBarItem()" ><i class="icon ion-backspace-outline"></i> Làm sạch</span>
+                    </div>
+                    <div class="item item-text-wrap">
+                        <div class="add-service-product"><!--ng-show="!hourService.isUse && !hourService.allProduct"-->
+                            <label class="item-input-wrapper border-bottom margin-bottom" ng-hide="showCategoriesItem">
+                                <i class="icon ion-ios-search placeholder-icon"></i>
+                                <input type="search" placeholder="Nhập tên để tìm món" ng-model="searchProduct" ng-enter="search_product(searchProduct)" ng-change="change_search(searchProduct)" style="width:75%">
+                                <button class="button button-small button-clear button-positive" on-tap="openCategories()">Chọn danh mục</button>
+                            </label>
+                            <div class="order-nav padding " ng-show="searchProductList.length == 0">
+                                <p>Không có kết quả phù hợp</p>
+                            </div>
+                            <div class="item item-divider" ng-show="showCategoriesItem">
+                                Chọn tất cả các món trong danh mục
+                                <button class="button-clear button button-assertive button-small right" style="margin-top: -5px;" on-tap="closeCategories()"><i class="icon ion-android-close"></i></button>
+                            </div>
+                            <div class="item item-divider" ng-show="searchProductList && !showCategoriesItem">
+                                Kết quả tìm từ khóa "{{searchProduct}}"
+                            </div>
+                            <ion-scroll delegate-handle="search-product-result_2" class="orders-details-2" ng-if="searchProductList && !showCategoriesItem">
+                                <ion-list class="orders-details">
+                                    <ion-item class="item item-button-right" ng-repeat="i in searchProductList track by i.itemId">
+                                        <h3>{{i.itemName}} <span class="assertive">{{i.retailPrice | number}}</span></h3>
+                                        <button class="button button-balanced right" on-tap="addBarItem(i)"><i class="icon ion-checkmark-circled"></i></button>
+                                    </ion-item>
+                                </ion-list>
+                            </ion-scroll>
+
+                            <ion-scroll delegate-handle="hour-service-product" class="orders-details-3" ng-if="!searchProductList && !showCategoriesItem">
+                                <ion-list class="orders-details">
+                                    <ion-item class="item item-button-right" ng-repeat="i in BarItemSetting track by i.itemId">
+                                        <h3>{{i.itemName}} <span class="assertive">{{i.retailPrice | number}}</span></h3>
+                                        <button class="button button-assertive right" on-tap="removeBarItem($index)"><i class="icon ion-android-cancel"></i></button>
+                                    </ion-item>
+                                </ion-list>
+                            </ion-scroll>
+
+                            <ion-scroll delegate-handle="categories-item" class="orders-details-3" ng-if="showCategoriesItem">
+                                <ion-list class="orders-details">
+                                    <ion-item class="item item-button-right" ng-repeat="i in categories track by $index">
+                                        <h3>{{i.categoryName}}</h3>
+                                        <button class="button button-balanced right" on-tap="showCategoriesItem=false;selectCategory(i)"><i class="icon ion-checkmark-circled"></i></button>
+                                    </ion-item>
+                                </ion-list>
+                            </ion-scroll>
+                        </div>
+                    </div>
+                    <button class="button button-full button-positive" on-tap="saveBarItem()"><i class="ion-checkmark-round"></i> Lưu thiết lập</button>
+                </div>
+            </div>
+            <div class="custom-tab-content" id="tab-6" ng-show="tabPrintSetting == 6">
+                <ul class="list">
+                    <li class="item item-checkbox checkbox-energized">
+                        Nhận lệnh in hóa đơn bán hàng từ App tại máy tính này.
+                        <label class="checkbox">
+                            <input type="checkbox" ng-model="printHelper.cashier">
+                        </label>
+                    </li>
+                    <li class="item item-checkbox checkbox-energized">
+                        Nhận lệnh in bếp từ App tại máy tính này.
+                        <label class="checkbox">
+                            <input type="checkbox" ng-model="printHelper.kitchen">
+                        </label>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+
+                <div class="col text-center">
+                    <button class="button button-positive button-full" on-tap="savePrintHelper(printHelper)">Lưu thiết lập</button>
+                </div>
+            </div>
+        </ion-content>
+    </ion-modal-view>
+</script>
+<script id="printed-list.html" type="text/ng-template">
+    <ion-modal-view>
+        <ion-header-bar class="bar bar-header bar-positive">
+            <h1 class="title">Các phiếu đã in bếp</h1>
+            <button class="right button button-clear ion-close" on-tap="closeRePrintList()"></button>
+        </ion-header-bar>
+        <ion-content>
+            <div class="table-order-list wide-as-needed">
+                <ion-scroll delegate-handle="printed-list" direction="x">
+                    <div class="" style="width:300px;display:inline-block" ng-repeat="o in tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.printed track by $index">
+                        <div class="card">
+                            <div class="item item-divider">
+                                Phiếu in #{{$index + 1}}
+                            </div>
+                            <div class="item item-text-wrap">
+                                <ion-scroll delegate-handle="printed-list-{{$index}}" direction="y" style="width:100%;height:40vh;">
+                                    <ul class="list">
+                                        <li class="item" ng-repeat="i in o.saleOrder.orderDetails track by $index">
+                                            <span ng-if="!i.isChild"><span class="left quantity">{{i.quantity}}</span>{{i.itemName}}</span>
+                                            <span ng-if="i.isChild" style="font-style:italic;">{{i.isChild}} {{i.quantity}} x {{i.itemName}}</span>
+                                        </li>
+                                    </ul>
+                                </ion-scroll>
+                            </div>
+                            <a class="button button-full button-positive" on-tap="rePrint(o)">
+                                <i class="icon ion-ios-printer-outline"></i>
+                                In lại
+                            </a>
+                        </div>
+                    </div>
+                </ion-scroll>
+            </div>
+        </ion-content>
+    </ion-modal-view>
+</script>
+<script id="user-in-store-list.html" type="text/ng-template">
+    <ion-popover-view>
+        <ion-header-bar>
+            <h1 class="title">Chọn phục vụ</h1>
+        </ion-header-bar>
+        <ion-content>
+            <div class="list table-actions">
+                <a class="item" ng-repeat="s in saleList track by $index" on-tap="changeSale(s)" ng-show="checkUserInStore(s)">
+                    {{s.displayName}} <i class="ion-checkmark-round balanced" ng-show="s.userId == tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.saleUser.userId"></i>
+                </a>
+            </div>
+        </ion-content>
+    </ion-popover-view>
+</script>
+<script id="staff-list.html" type="text/ng-template">
+    <ion-popover-view>
+        <ion-header-bar>
+            <h1 class="title">Chọn nhân viên</h1>
+        </ion-header-bar>
+        <ion-content>
+            <div class="list table-actions">
+                <!--<a class="item" on-tap="getStoreReport(modalStoreReport.fromDate,modalStoreReport.toDate)">
+                    Tất cả nhân viên <i class="ion-checkmark-round balanced" ng-show="!currentUserReport"></i>
+                </a>-->
+                <a class="item" ng-repeat="s in saleList track by $index" on-tap="filterBySale(s)" ng-show="checkUserInStore(s)">
+                    {{s.displayName}} <i class="ion-checkmark-round balanced" ng-show="currentUserReport.userId == s.userId"></i>
+                </a>
+            </div>
+        </ion-content>
+    </ion-popover-view>
+</script>
+<script id="store-report.html" type="text/ng-template">
+    <ion-modal-view>
+        <ion-header-bar class="bar bar-header bar-positive">
+            <h1 class="title">Báo cáo cuối ngày</h1>
+            <button class="right button button-clear ion-close" on-tap="closeStoreReport()"></button>
+        </ion-header-bar>
+        <ion-content>
+            <div class="padding left">
+                <button class="button button-small button-positive" ng-show="!showOrderList" on-tap="showOrderList=true">Thực thu</button>
+                <button class="button button-small button-positive" ng-show="showOrderList" on-tap="showOrderList=false">Đơn hàng</button>
+                <button class="button button-outline button-small button-calm" ng-show="!showSelectDate" on-tap="showSelectDate=true">Lọc theo khoản thời gian</button>
+                <button ng-show="showSelectDate" ion-datetime-picker monday-first ng-model="modalStoreReport.fromDate" class="button button-outline button-small button-calm">
+                    {{modalStoreReport.fromDate ? modalStoreReport.fromDate : 'Đầu ca' | date: "dd/MM/yyyy H:mm:ss"}}
+                </button>
+                <button ng-show="showSelectDate" ion-datetime-picker monday-first ng-model="modalStoreReport.toDate" class="button button-outline button-small button-calm">
+                    {{modalStoreReport.toDate ? modalStoreReport.toDate : 'Cuối ca'| date: "dd/MM/yyyy H:mm:ss"}}
+                </button>
+                <button ng-show="showSelectDate" class="button button-small button-energized" on-tap="renewStoreReport(modalStoreReport.fromDate,modalStoreReport.toDate)">Chạy lại báo cáo</button>
+            </div>
+            <div class="right padding" ng-show="isManager">
+                <i class="ion-person font20"></i> Thu ngân :
+                <button style="margin-top: -2px;" class="button button-small button-assertive button-clear icon-right ion-chevron-down" ng-show="!currentUserReport" on-tap="openPopOverStaffList($event)">Tất cả</button>
+                <button style="margin-top: -2px;" class="button button-small button-assertive button-clear icon-right ion-chevron-down" ng-show="currentUserReport" on-tap="openPopOverStaffList($event)">{{currentUserReport.displayName}}</button>
+            </div>
+            <div class="row border-top" ng-if="!showOrderList">
+                <div class="col col-20 calm">
+                    <div class="icon-left"><i class="ion-bag font30"></i></div>
+                    <div class="detail-right">
+                        <p>{{reportModel.saleCount}}</p>
+                        <p ng-show="isWebView">Đơn hàng</p>
+                        <p ng-show="!isWebView">Đ.Hàng</p>
+                    </div>
+                </div>
+                <div class="col col-20 assertive">
+                    <div class="icon-left"><i class="ion-social-usd font30"></i></div>
+                    <div class="detail-right">
+                        <p>{{reportModel.saleTotal | number}}</p>
+                        <p ng-show="isWebView">Tiền bán hàng</p>
+                        <p ng-show="!isWebView">Tiền B.Hàng</p>
+                    </div>
+                </div>
+                <div class="col col-20 balanced">
+                    <div class="icon-left"><i class="ion-cash font30"></i></div>
+                    <div class="detail-right">
+                        <p>{{reportModel.cashTotal | number}}</p>
+                        <p ng-show="isWebView">Tiền mặt</p>
+                    </div>
+                </div>
+                <div class="col col-20 energized">
+                    <div class="icon-left"><i class="ion-card font30"></i></div>
+                    <div class="detail-right">
+                        <p>{{reportModel.cardTotal | number}}</p>
+                        <p ng-show="isWebView">Thanh toán thẻ</p>
+                        <p ng-show="!isWebView">Thẻ</p>
+                    </div>
+                </div>
+                <div class="col col-20 royal">
+                    <div class="icon-left"><i class="ion-person-stalker font30"></i></div>
+                    <div class="detail-right">
+                        <p>{{reportModel.debtTotal | number}}</p>
+                        <p ng-show="isWebView">Khách nợ</p>
+                        <p ng-show="!isWebView">KH.Nợ</p>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="row text-center border-top report-detail" ng-show="!showOrderList">
+                <div class="col col-5 left"> </div>
+                <div class="col col-20 left">Mã ĐH</div>
+                <div class="col col-20 left">Thời gian </div>
+                <div class="col col-20 left">Thu ngân</div>
+                <div class="col col-10 left" ng-show="isWebView">S.Lượng</div>
+                <div class="col col-10 left" ng-show="!isWebView">S.L</div>
+                <div class="col col-20 left">Tổng tiền</div>
+                <div class="col col-5 left">In</div>
+            </div>
+            <ion-scroll delegate-handle="orderd-list" style="width:100%;height:35vh;" ng-show="!showOrderList">
+                <div ng-repeat="r in reports.storeSales track by $index" ng-if="currentUserReport.userId == r.userId || currentUserReport.userId == 0">
+                    <div class="row text-center border-top" id="{{'row-num'+$index}}">
+                        <div class="col col-5 left"><i ng-class="r.isCollapse ? 'ion-plus-circled' : 'ion-ios-minus'" ng-click="showReportDetails(r)" style="color: #0b87c9; cursor: pointer;"></i></div>
+                        <div class="col col-20 left">{{r.code}}</div>
+                        <div class="col col-20 left">{{r.date | formatDate }}</div>
+                        <div class="col col-20 left">{{r.userId | cashier : authBootloader.users.userProfiles}}</div>
+                        <div class="col col-10 left">{{r.quantity}}</div>
+                        <div class="col col-20 left">{{r.total | number}}</div>
+                        <div class="col col-5 left"><button class="button button-clear button-small" on-tap="rePrintOrder(r)"><i class="ion-printer font16"></i></button></div>
+                    </div>
+                    <div ng-show="!r.isCollapse" class="row text-center border-top" style="background-color: #efefef">
+                        <div class="col col-100 left">
+                            <div class="row text-center border-top report-detail" style="background-color: #efefef">
+                                <div class="col col-30 left" ng-show="isWebView">H.Hóa</div>
+                                <div class="col col-20 left" ng-show="isWebView">S.Lượng</div>
+                                <div class="col col-20 left" ng-show="isWebView">Giá</div>
+                                <div class="col col-10 left" ng-show="isWebView">Giảm giá</div>
+                                <div class="col col-20 left" ng-show="isWebView">Thành tiền</div>
+                                <div class="col col-30 left" ng-show="!isWebView">H.Hóa</div>
+                                <div class="col col-20 left" ng-show="!isWebView">S.L</div>
+                                <div class="col col-20 left" ng-show="!isWebView">Giá</div>
+                                <div class="col col-10 left" ng-show="!isWebView">Giảm</div>
+                                <div class="col col-20 left" ng-show="!isWebView">Th.Tiền</div>
+                            </div>
+                            <div ng-repeat="d in r.details track by $index" class="row text-center border-top" style="margin-top: 0px; background-color:white;">
+                                <div class="col col-30 left">{{d.itemName}}</div>
+                                <div class="col col-20 left">{{d.quantity}}</div>
+                                <div class="col col-20 left">{{d.retailPrice | number}}</div>
+                                <div class="col col-10 left">{{d.discount | number}}<span ng-if="d.discountIsPercent" style="font-weight: 600;">%</span></div>
+                                <div class="col col-20 left">{{d.subTotal | number}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ion-scroll>
+            <div class="text-center space20" ng-show="!showOrderList">
+                <button class="button button-positive" ng-show="isManager" on-tap="endSession()">Kết ca cuối ngày</button>
+            </div>
+            <div class="border-top" ng-show="showOrderList"></div>
+            <div class="report-cash" ng-show="showOrderList">
+                <p>
+                    <div>
+                <p>Từ ngày:<b> {{modalStoreReport.fromDate | date : 'dd/MM/yyyy HH:mm'}}</b></p>
+                <p>Đến ngày:<b> {{modalStoreReport.toDate | date : 'dd/MM/yyyy HH:mm'}}</b></p>
+            </div>
+            <div class="ft-payment border-bottom">
+                <label class="item item-input item-select block-times payment font14">
+                    <div class="input-label">
+                        Loại thanh toán:
+                    </div>
+                    <!--<select ng-model="paymentMethod.val" ng-change="selectPaymentMethod(paymentMethod)">
+                        <option value="0">Tất cả</option>
+                        <option value="1">Tiền mặt</option>
+                        <option value="2">Thẻ</option>
+                    </select>-->
+                    <select ng-model="currentPaymentMethodReport" ng-change="changePaymentMethodReport(currentPaymentMethodReport)" ng-options="method.label for method in paymentMethodsReport track by method.id"></select>
+                </label>
+            </div>
+
+            <span class="text-left" ng-show="currentPaymentMethodReport.id != 2">Tồn quỹ đầu ngày :</span>
+            <span class="text-right" ng-show="!viewChangeBalance && currentPaymentMethodReport.id !=2">
+                {{balance | number}}
+                <button ng-show="isManager" style="margin-top: -15px;margin-right: -32px;" class="button button-small button-energized" on-tap="changeBalance()"> <i class="ion-social-usd"></i></button>
+            </span>
+            <span class="text-right relative" ng-show="viewChangeBalance">
+                <input type="number" ng-model="balance">
+                <button style="margin-top: -15px;" class="button button-small button-balanced" on-tap="updateBalance(balance)"> <i class="ion-checkmark-round"></i></button>
+            </span>
+            </p>
+            <p><span class="text-left">Thu bán hàng:</span> <span class="text-right">{{reportModel.saleMoney | number}}</span></p>
+            <p><span class="text-left" ng-if="reportModel.paidDebtMoney > 0">Thu nợ:</span> <span class="text-right" ng-if="reportModel.paidDebtMoney > 0">{{reportModel.paidDebtMoney | number}}</span></p>
+            <p><span class="text-left" ng-if="reportModel.expenseMoney > 0">Chi phí:</span> <span class="text-right" ng-if="reportModel.expenseMoney > 0">({{reportModel.expenseMoney | number}})</span></p>
+            <p>
+                <span class="text-left">Tồn quỹ cuối ngày:</span>
+                <span class="text-right"><b>{{reportModel.remainMoney | number }} </b></span>
+            </p>
+            </div>
+            <div class="text-center space20" ng-if="showOrderList">
+                <button class="button button-positive" on-tap="printReport()">In báo cáo kết ca</button>
+            </div>
+        </ion-content>
+    </ion-modal-view>
+</script>
+<script id="sync-setting.html" type="text/ng-template">
+    <ion-modal-view>
+        <ion-header-bar class="bar bar-header bar-positive">
+            <h1 class="title">Thiết lập dịch vụ tính giá theo giờ</h1>
+            <button class="right button button-clear ion-close" on-tap="closeServiceSetting()"></button>
+        </ion-header-bar>
+        <ion-content>
+            <div class="hour-service-setting">
+                <div class="col col-50 left">
+                    <div class="padding-left padding-right">
+                        <ion-toggle ng-model="hourService.isUse" toggle-class="toggle-calm">Sử dụng dịch vụ</ion-toggle>
+                    </div>
+                    <label class="item item-input item-select block-times">
+                        <div class="input-label">
+                            Làm tròn giá theo block
+                        </div>
+                        <select ng-model="hourService.optionSelected" ng-change="selectUpdated(hourService.optionSelected)">
+                            <option value="1">15 phút</option>
+                            <option value="2">30 phút</option>
+                            <option value="3">60 phút</option>
+                            <option value="0">Tùy chọn</option>
+                        </select>
+                    </label>
+                    <label class="item-input-wrapper border-bottom" ng-show="hourService.optionSelected==0">
+                        <i class="icon ion-compose placeholder-icon"></i>
+                        <input type="number" placeholder="Nhập vào số phút mỗi block bạn muốn thiết lập" min="1" ng-model="hourService.blockCounter" style="width:100%">
+                    </label>
+                </div>
+                <div class="col col-50 left list-service-product">
+                    <div class="padding-left padding-right">
+                        <ion-toggle ng-model="hourService.allProduct" toggle-class="toggle-calm">Áp dụng cho tất cả sản phẩm</ion-toggle>
+                    </div>
+                    <div class="add-service-product" ng-show="!hourService.allProduct">
+                        <label class="item-input-wrapper border-bottom margin-bottom">
+                            <i class="icon ion-ios-search placeholder-icon"></i>
+                            <input type="search" placeholder="Chọn sản phẩm tính giá theo giờ" ng-model="searchProduct" ng-enter="search_product(searchProduct)" ng-change="change_search(searchProduct)" style="width:100%">
+                        </label>
+                        <div class="order-nav padding " ng-show="searchProductList.length == 0">
+                            <p>Không có kết quả phù hợp</p>
+                        </div>
+                        <div class="item item-divider" ng-show="searchProductList">
+                            Kết quả tìm từ khóa "{{searchProduct}}"
+                        </div>
+                        <ion-scroll delegate-handle="search-product-result_2" class="orders-details-2" ng-show="searchProductList">
+                            <ion-list class="orders-details">
+                                <ion-item class="item" ng-repeat="i in searchProductList track by i.itemId">
+                                    <div>
+                                        <h3>{{i.itemName}}</h3>
+                                        <div>
+                                            <span class="font14">x {{i.retailPrice | number}}</span>
+                                            <span class="right"><button class="button button-small button-assertive" on-tap="addServiceProduct(i)">Chọn</button></span>
+                                            <span class="clearfix"></span>
+                                        </div>
+                                    </div>
+                                </ion-item>
+                            </ion-list>
+                        </ion-scroll>
+                        <div class="item item-divider" ng-show="hourService.itemArr.length > 0 && !searchProductList">
+                            Danh sách dịch vụ tính giá theo giờ
+                        </div>
+                        <ion-scroll delegate-handle="hour-service-product" class="orders-details-3" ng-show="!searchProductList">
+                            <ion-list class="orders-details">
+                                <ion-item class="item" ng-repeat="i in hourService.itemArr track by i.itemId">
+                                    <div>
+                                        <h3>{{i.itemName}}</h3>
+                                        <div>
+                                            <span class="font14">x {{i.retailPrice | number}}</span>
+                                            <span class="right"><button class="button button-small button-assertive button-clear" on-tap="removeServiceProduct($index)"><i class="ion-ios-trash font20"></i></button></span>
+                                            <span class="clearfix"></span>
+                                        </div>
+                                    </div>
+                                </ion-item>
+                            </ion-list>
+                        </ion-scroll>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="padding">
+                    <button class="button button-full button-positive" on-tap="saveServiceSetting()">Lưu thiết lập</button>
+                </div>
+            </div>
+        </ion-content>
+    </ion-modal-view>
+</script>
+
+<script id="viewcomment.html" type="text/ng-template">
+    <ion-modal-view style="min-height: 250px;">
+        <ion-header-bar style="background-color: #0b87c9;">
+            <h1 class="title" style="color: white;">Ghi chú của đơn hàng</h1>
+            <button class="right button button-clear ion-close" on-tap="closeViewComment()"></button>
+        </ion-header-bar>
+        <ion-content>
+            <div class="row">
+                <textarea ng-model="tableIsSelected.tableOrder[orderIndexIsSelected].saleOrder.comment" disabled="disabled" style="width: 100%; height: 100%;" rows="20"></textarea>
+            </div>
+        </ion-content>
+    </ion-modal-view>
+</script>
+<script id="earningpoint.html" type="text/ng-template">
+    <ion-popover-view style="min-height: 320px;">
+        <ion-header-bar style="background-color: #0b87c9;">
+            <h1 class="title" style="color: white;">Đổi điểm</h1>
+            <button class="right button button-clear ion-close" on-tap="closeEarningPointPopOver()"></button>
+        </ion-header-bar>
+        <ion-content>
+            <div class="row">
+                <p style="font-style: italic;"><span style="text-decoration: underline;">Lưu ý</span>: Chỉ nên quy đổi điểm thưởng khi chuẩn bị thực hiện thanh toán.</p>
+            </div>
+            <div class="row">
+                <i style="color: green;" class="ion-ios-checkmark"></i>&nbsp;Quy đổi điểm thưởng
+            </div>
+            <div class="row">
+                <div class="col-75">
+                    <input type="number" min="0" style="border: 1px solid #c7c8c9; padding-left: 5px;" ng-model="earningPoint.exchangePoint" ng-change="calculateEarningMoney()" placeholder="Nhập số điểm" />
+                </div>
+                <div class="col-25">
+                    <button class="button button-positive button-small" style="width: 100%; height: 100%;" title="Đổi điểm tối đa" on-tap="getMaxEarningPoint()"><i class="ion-arrow-swap"></i></button>
+                </div>
+            </div>
+            <p style="padding-left: 5px;">Tiền hàng: <span style="font-weight: 600;">{{earningPoint.subTotal | number:0}}</span></p>
+            <p style="padding-left: 5px;">Tiền quy đổi: <span style="font-weight: 600;">{{earningPoint.earningMoney | number:0}}</span></p>
+            <p style="padding-left: 5px;">Thanh toán: <span style="font-weight: 600;">{{earningPoint.total | number:0}}</span></p>
+            <div class="row">
+                <button on-tap="exchangeEarningPoint($event)" style="margin: 0px auto;" class="button button-small button-balanced">Áp dụng</button>
+            </div>
+        </ion-content>
+    </ion-popover-view>
+</script>
+<script id="item-detail.html" type="text/ng-template">
+    <ion-modal-view>
+        <ion-header-bar style="background-color: #0b87c9;">
+            <h1 class="title" style="color: white;">Tùy chọn mở rộng</h1>
+            <button class="right button button-clear ion-close" on-tap="closeModalItemOption()"></button>
+        </ion-header-bar>
+        <ion-content>
+            <ion-scroll direction="y">
+                <ion-item class="item">
+                    <!--<div ng-show="!selectedItem.timer && !selectedItem.endTime" class="hide-on-keyboard-open">
+                        <span class="icon" ng-show="selectedItem.newOrderCount==0" on-tap="changeQuantity(1,selectedItem)" ng-class="{'font20': getQuatityLength(p.quantity) > 2,'font16': getQuatityLength(p.quantity) > 3,'font14': getQuatityLength(p.quantity) > 5}">{{selectedItem.quantity}}</span>
+                        <span class="icon quantity" ng-show="selectedItem.newOrderCount>0" on-tap="changeQuantity(1,selectedItem)" ng-class="{'font20': getQuatityLength(p.quantity) > 2,'font16': getQuatityLength(p.quantity) > 3,'font14': getQuatityLength(p.quantity) > 5}"><span>{{selectedItem.quantity}}</span> <span class="font14 balanced">+{{selectedItem.newOrderCount}}</span></span>
+                    </div>
+                    <div ng-show="selectedItem.timer || selectedItem.endTime" class="hide-on-keyboard-open">
+                        <span class="icon">
+                            <span><i class="ion-clock font30 balanced"></i></span>
+                            <span class="font14 balanced" ng-show="selectedItem.newOrderCount>0"><br />+</span>
+                        </span>
+                    </div>-->
+                    <div>
+                        <div style="font-weight: bold; width: 100%; white-space: normal;">Hàng hóa: {{selectedItem.itemName}}</div>
+                        <div style="font-weight: 600;" ng-show="selectedItem.isServiceItem">
+                            <div style="font-size: 14px;">- Loại hàng hóa tính giờ <span class="assertive" ng-show="selectedItem.newOrderCount>0">(Chưa đồng bộ)</span></div>
+                            <div ng-show="selectedItem.startTime" style="font-size: 14px;">- Giờ vào {{selectedItem.startTime | date:'HH:mm'}} <span ng-show="selectedItem.endTime">- Giờ ra {{selectedItem.endTime | date:'HH:mm'}}</span></div>
+                            <div style="font-size: 14px">- Trạng thái: <span style="color: #0342c3;">{{selectedItem.timeCounter != undefined ? (selectedItem.timer ? 'Đang tính giờ' : 'Ngừng tính giờ') : 'Chưa tính giờ'}}</span></div>
+                            <div ng-show="selectedItem.blockCount" style="font-size: 14px;">- Thời gian sử dụng: {{selectedItem.blockCount}}</div>
+                        </div>
+                        <div style="font-weight: 600;" ng-show="!selectedItem.isServiceItem">
+                            <span style="font-size: 14px;">- Số lượng: <span style="font-weight: bold;">{{selectedItem.quantity | roundQuantityIfFloating:2}}</span> <span class="assertive" ng-show="selectedItem.newOrderCount > 0">({{selectedItem.newOrderCount | roundQuantityIfFloating:2}} chưa báo bếp)</span></span>
+                        </div>
+                        <div style="font-weight: 600;">
+                            <span style="font-size: 14px;">- Giá: {{selectedItem.unitPrice | number}} 
+                                <span class="assertive" ng-show="selectedItem.discount > 0 && selectedItem.isDiscountPercent"> (đã giảm {{selectedItem.discountPercent | number}}%)</span>
+                                <span class="assertive" ng-show="selectedItem.discount > 0 && !selectedItem.isDiscountPercent"> (đã giảm {{selectedItem.discount | number}})</span>
+                            </span>
+                        </div>
+                        <div style="font-weight: 600;">
+                            <span style="font-size: 14px;">- Thành tiền: <span style="font-weight: bold;">{{selectedItem.subTotal | number:0}}</span></span>
+                        </div>
+                    </div>
+                </ion-item>
+                <div class="hide-item-action">
+                    <div class="col col-100">
+                        <textarea class="item-cmt" ng-model="selectedItem.comment" placeholder="Ghi chú cho bếp"></textarea>
+                    </div>
+
+                    <div class="col col-100 text-center">
+                        <!--<button class="button button-stable button-small" on-tap="closeChangeQuantity(); closeModalItemOption()"><i class="ion-reply"></i> Trở về</button>-->
+                        <button class="button button-assertive button-small" on-tap="removeItem(selectedItem.quantity)">Xóa</button>
+                        <button class="button button-positive button-small" ng-show="selectedItem.isServiceItem && selectedItem.timer == undefined" on-tap="startCounter(selectedItem)">Bắt đầu tính giờ</button>
+                        <button class="button button-positive button-small" ng-show="selectedItem.isServiceItem && selectedItem.timer == true" on-tap="stopCounter(selectedItem)">Ngừng tính giờ</button>
+                        <button class="button button-positive button-small" ng-show="selectedItem.isServiceItem && selectedItem.timer == false" on-tap="startCounter(selectedItem)">Tiếp tục tính giờ</button>
+                        <button class="button button-small" style="background-color: #cbcbcb; color: white;" on-tap="openChangeQuantity(1); showChangeQuantity = true; showChangePrice = false; showDiscount = false;" ng-hide="selectedItem.isServiceItem">Giảm đi</button>
+                        <button class="button button-positive button-small" on-tap="openChangeQuantity(2); showChangeQuantity = true; showChangePrice = false; showDiscount = false;" ng-hide="selectedItem.isServiceItem">Tăng thêm</button>
+                        <button class="button button-positive button-small hidden-480" on-tap="openChangeQuantity(3); showChangeQuantity = true; showChangePrice = false; showDiscount = false;" ng-hide="selectedItem.isServiceItem">Số lượng mới</button>
+                        <button class="button button-balanced button-small" ng-show="settings.saleSetting.allowPriceModified" on-tap="showChangePrice = true; showChangeQuantity = false; showDiscount = false;">Giá mới</button>
+                        <button class="button button-assertive button-small" ng-show="settings.saleSetting.allowPriceModified" on-tap="showDiscount = true; showChangeQuantity = false; showChangePrice = false;">Giảm giá</button>
+                    </div>
+
+                    <div class="border-bottom col col-100" ng-show="settings.saleSetting.allowPriceModified && ((!showChangeQuantity && !showChangePrice) || showDiscount)">
+                        <div class="col col-50-fixed" style="display: inline-block;vertical-align: middle;">
+                            <div class="right">
+                                <ion-toggle ng-model="selectedItem.isDiscountPercent" toggle-class="toggle-calm"><span class="font14">Giảm giá ({{selectedItem.isDiscountPercent?'%':'vnđ'}})</span></ion-toggle>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="col col-40-fixed" style="display: inline-block; vertical-align: middle;">
+                            <div class="left" style="height: 100%;">
+                                <input style="border-bottom: 1px solid #b6b6b6" type="number" ng-show="selectedItem.isDiscountPercent" ng-change="discountItem()" ng-model="selectedItem.discountPercent" placeholder="Nhập tỷ lệ" valid-number>
+                                <input style="border-bottom: 1px solid #b6b6b6" type="number" ng-show="!selectedItem.isDiscountPercent" ng-change="discountItem()" ng-model="selectedItem.discount" placeholder="Nhập số tiền" valid-number>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="border-bottom col col-100" ng-show="showChangeQuantity">
+                        <div class="col col-40-fixed" style="display: inline-block; vertical-align: middle;">
+                            <div class="right">
+                                <span class="font14">{{showChangeQuantityOption == 1 ? 'Giảm số lượng' : showChangeQuantityOption == 2 ? 'Tăng số lượng' : 'Số lượng mới'}}</span>
+                            </div>
+                        </div>
+                        <div class="col col-50-fixed" style="display: inline-block; vertical-align: middle;">
+                            <div class="left" style="height: 100%;">
+                                <input type="number" style="border-bottom: 1px solid #b6b6b6" ng-model="selectedItem.changeQuantity" placeholder="Nhập số lượng" min="0" valid-number class="left">
+                                <button class="button button-balanced button-clear button-small" on-tap="submitChangeQuantity(selectedItem.changeQuantity)">Hoàn tất</button>
+                                <!--<button class="button button-stable button-clear button-small" on-tap="closeChangeQuantity()">Hủy</button>-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="border-bottom col col-100" ng-show="showChangePrice">
+                        <div class="col col-40-fixed" style="display: inline-block; vertical-align: middle;">
+                            <div class="right">
+                                <span class="font14">Giá mới</span>
+                            </div>
+                        </div>
+                        <div class="col col-50-fixed" style="display: inline-block; vertical-align: middle;">
+                            <div class="left" style="height: 100%;">
+                                <input type="number" min="0" style="border-bottom: 1px solid #b6b6b6" ng-model="newPrice" placeholder="Nhập giá bán mới" valid-number class="left">
+                                <button class="button button-balanced button-clear button-small" on-tap="changeItemPrice(newPrice);newPrice=null;showChangePrice=false">Hoàn tất</button>
+                                <!--<button class="button button-stable button-clear button-small" on-tap="showChangePrice=false">Hủy</button>-->
+                            </div>
+                        </div>
+
+
+                        <!--<div class="col col-100 left discount-price text-center">
+                            <input type="number" min="0" ng-model="newPrice" placeholder="Nhập giá bán mới" valid-number class="left">
+                            <button class="button button-balanced button-clear button-small" on-tap="changeItemPrice(newPrice);newPrice=null;showChangePrice=false">Hoàn tất</button>
+                            <button class="button button-stable button-clear button-small" on-tap="showChangePrice=false">Hủy</button>
+                        </div>-->
+                    </div>
+                </div>
+            </ion-scroll>
+        </ion-content>
+    </ion-modal-view>
+</script>
+<script id="promotion.html" type="text/ng-template">
+    <ion-modal-view style="max-height:600px;">
+        <ion-header-bar class="bar bar-header bar-positive">
+            <h1 class="title">Chương trình khuyến mãi</h1>
+            <button class="right button button-clear ion-close" on-tap="closePromotionPopOver()"></button>
+        </ion-header-bar>
+        <ion-content style="overflow: auto;">
+            <div class="row">
+                <button class="button button-small button-positive button-outline" ng-class="{'active':promotionTab==1}" on-tap="promotionTab = 1"><i class="ion-checkmark font20"></i> Áp dụng</button>
+                <button class="button button-small button-positive button-outline margin-left-10" ng-class="{'active':promotionTab==2}" on-tap="promotionTab = 2"><i class="ion-android-list font20"></i> Danh sách CTKM</button>
+            </div>
+            <br />
+            <div class="custom-tab-content" id="tab-1" ng-show="promotionTab == 1">
+                &nbsp;&nbsp;<i style="color:green;" ng-show="promotion.promotionType == 1" class="ion-checkmark-circled"></i> Áp dụng khuyến mãi theo hàng hóa
+                <div class="row" style="padding-bottom: 0px;">
+                    <div class="col col-40 text-center left border-top header-promotion-custom">Hàng hóa</div>
+                    <div class="col col-10 text-center left border-top header-promotion-custom">Số lượng</div>
+                    <div class="col col-20 text-center left border-top header-promotion-custom">Tiền giảm</div>
+                    <div class="col col-30 text-center left border-top header-promotion-custom">Áp dụng</div>
+                </div>
+                <ion-scroll delegate-handle="promotionTab1" style="height: auto; max-height: 150px;">
+                    <!--<div class="row"  style="padding-top: 0px;" ng-repeat="item in promotion.orderDetails track by $index" ng-if="item.promotionOnItemList && item.promotionOnItemList.length > 0">-->
+                    <div class="row" style="padding-top: 0px;" ng-repeat="item in promotion.itemList track by $index">
+                        <div style="font-weight: 600" class="col col-40 text-center left border-top">{{item.itemName }}</div>
+                        <div style="font-weight: 600" class="col col-10 text-center left border-top">{{item.quantity}}</div>
+                        <div style="font-weight: 600" class="col col-20 text-center left border-top">{{item.discount | number:0}}</div>
+                        <div class="col col-30 text-center left border-top">
+                            <select style="width: 100%;" ng-model="item.promotionOnItemSelected" ng-change="changePromotionOnItem(item)" ng-options="p.promotionLabel for p in item.promotionOnItem"></select>
+                        </div>
+                    </div>
+                </ion-scroll>
+                <br />
+                <div class="row">
+                    <div class="col col-50 left">
+                        <i style="color: green;" ng-show="promotion.promotionType > 1" class="ion-checkmark-circled"></i> Áp dụng khuyến mãi theo hóa đơn
+                    </div>
+                    <div class="col col-50 left">
+                        <select style="width:100%;" ng-model="promotion.promotionOnBillSelected" ng-change="changePromotionOnBill()" ng-options="p.promotionLabel for p in promotion.promotionOnBill"></select>
+                    </div>
+                </div>
+                <div class="row" ng-show="promotion.promotionOnBillSelected.isCodeRequired">
+                    <div class="col col-50 left">
+                    </div>
+                    <div class="col col-50 left">
+                        <input type="text" ng-model="promotion.promotionCode" style="width: 100%; padding-left: 5px; border-bottom: 1px solid #a7a7a7;" placeholder="Nhập mã khuyến mãi" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col left">&nbsp;&nbsp;&nbsp;&nbsp;Giảm giá KM: <span style="font-weight: 600;">{{promotion.discountMoney | number:0}}</span></div>
+                </div>
+                <div class="row">
+                    <div class="col left">&nbsp;&nbsp;&nbsp;&nbsp;Thanh toán <span style="font-weight: 600;">{{promotion.total | number:0}}</span></div>
+                </div>
+                <div class="row">
+                    <div class="col-50">
+                        <button on-tap="applyOptionPromotion()" style="float:right; margin-right:5px;" class="button button-balanced"><i class="ion-checkmark"></i> Áp dụng</button>
+                    </div>
+                    <div class="col-50">
+                        <button on-tap="getOptimalPromotion()" style="float: left;" class="button button-positive"><i class="ion-arrow-graph-up-right"></i> Tối ưu</button>
+                    </div>
+                </div>
+            </div>
+            <div class="custom-tab-content" id="tab-2" ng-show="promotionTab == 2">
+                <div class="row" style="padding-bottom: 0px;">
+                    <div class="col col-10 text-center left border-top header-promotion-custom">STT</div>
+                    <div class="col col-40 text-center left border-top header-promotion-custom">Chương trình KM</div>
+                    <div class="col col-20 text-center left border-top header-promotion-custom">Giảm giá</div>
+                    <div class="col col-30 text-center left border-top header-promotion-custom">Loại</div>
+                </div>
+                <ion-scroll delegate-handle="promotionTab2" style="height: 200px; margin: 5px;">
+                    <div class="row" style="padding-top: 0px; margin: 5px 0px; border-bottom: 1px solid #c7c8c9;" ng-repeat="promotion in activatedPromotions track by $index">
+                        <div class="col col-10 text-center left">{{ $index + 1 }}</div>
+                        <div class="col col-40 text-center left" style="font-weight: 600;">{{ promotion.promotionName }}</div>
+                        <div class="col col-20 text-center left" style="color: #69aa46; font-weight: 600;">{{ promotion.isPercent ? promotion.discountPercent + '%' : promotion.discountPrice + 'đ' }}</div>
+                        <div class="col col-30 text-center left" style="font-weight: 600;">{{ promotion.promotionType == 1 ? 'Giảm giá trên hàng hóa' : 'Giảm giá trên hóa đơn' }}</div>
+                    </div>
+                </ion-scroll>
+            </div>
+        </ion-content>
+    </ion-modal-view>
+</script>
+<script id="profile.html" type="text/ng-template">
+    <ion-modal-view style="max-height: 300px;">
+        <ion-header-bar style="background-color: #0b87c9;">
+            <h1 class="title" style="color: white;">Thông tin tài khoản</h1>
+            <button class="right button button-clear ion-close" on-tap="modalProfile.hide()"></button>
+        </ion-header-bar>
+        <ion-content style="padding: 20px;">
+            <ion-scroll direction="y">
+                <br/>
+                <div style="font-size: 20px; margin-bottom: 10px; font-weight: 600;">Tài khoản: {{userSession.displayName}}</div>
+                <div style="font-size: 14px; margin-bottom: 10px; font-weight: 600;">Loại tài khoản: <span style="color: #0b87c9;">{{isManager ? 'Tài khoản quản lý' : 'Tài khoản thường'}}</span></div>
+                <div ng-show="isManager && !isIOS && !isIPad" on-tap="openLink('https://pos.suno.vn')" style="font-size: 14px; margin-bottom: 10px; font-weight: 600; background-color: #0b87c9; color: white; display: inline; border-radius: 3px; padding: 5px; cursor: pointer;"> Chuyển sang trang quản lý <span style=""></span></div>
+                <div style="font-size: 14px; margin-bottom: 10px; font-weight: 600; margin-top: 10px;">Cửa hàng đang làm việc: <span style="color: #0b87c9;">{{currentStore.storeName}}</span></div>
+                <div style="font-size: 14px; margin-bottom: 10px; font-weight: 600; margin-top: 10px;">Đổi cửa hàng: <select ng-model="currentStore" ng-change="changeCurrentStore(currentStore)" ng-options="store.storeName for store in storesList | orderBy: 'storeID'"></select></div>
+            </ion-scroll>
+        </ion-content>
+    </ion-modal-view>
+</script>

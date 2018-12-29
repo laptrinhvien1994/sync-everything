@@ -1,0 +1,73 @@
+/*----------------RESPONSIVE FOR EACH DEVICE (TABLE)------------------*/
+
+.visible-480{
+    display: none;
+}
+.hidden-320{
+    display: inline;
+}
+.visible-320{
+    display: none;
+}
+
+@media (min-width: 320px){
+    .hidden-320{
+        display: none;
+    }
+    .visible-320{
+        display: inline;
+    }
+}
+@media (min-width: 480px){
+    .visible-320{
+        display: none;
+    }
+    .hidden-320{
+        display: inline;
+    }
+    .hidden-480{
+        display: none;
+    }
+    .visible-480{
+        display: inline! important;
+    }
+    .col-custom-x{
+        -webkit-box-flex: 0;
+        -webkit-flex: 0 0 65px;
+        -moz-box-flex: 0;
+        -moz-flex: 0 0 65px;
+        -ms-flex: 0 0 65px;
+        flex: 0 0 65px;
+        max-width: 65px; 
+    }
+    .w-table{
+        width: 55px;
+        height: 55px;
+        margin: 0 auto 2px auto; /*Update here to set distance of each row*/
+        background: #a4a8ae;
+        color: #ffffff;
+        border-bottom: 5px solid;
+        cursor: pointer;
+    }
+    p.table-index {
+        font-size: 2.1em;
+        padding-top: 8px;
+        margin: 0 0 2px;
+    }
+
+    p.start-time {
+        margin: 0;
+        height: 0px; /*Update here to set position of p.table-zone*/
+    }
+
+    p.table-zone{
+        font-size: 12px!important;
+    }
+
+    .font-size-20{
+    font-size: 17px;
+    }
+    .font-size-15{
+        font-size: 15px;
+    }
+}
