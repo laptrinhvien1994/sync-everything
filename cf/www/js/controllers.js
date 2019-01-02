@@ -65,16 +65,16 @@ var saleOrder = {
     "comment": "",
     "customer": null,
     "payments": [
-      {
-          "voucherId": 0,
-          "code": "",
-          "receivedDate": null,
-          "status": 3,
-          "paymentMethodId": 1,
-          "amount": 0,
-          "balance": 0,
-          "description": ""
-      }
+        {
+            "voucherId": 0,
+            "code": "",
+            "receivedDate": null,
+            "status": 3,
+            "paymentMethodId": 1,
+            "amount": 0,
+            "balance": 0,
+            "description": ""
+        }
     ],
     "orderDetails": [],
     "saleOrderCode": "",
@@ -368,14 +368,14 @@ function printOrderInBrowser(printer, saleOrder, type, setting) {
         saleOrder.startTimeString = dateFormat(saleOrder.startTime, "dd/mm/yyyy HH:MM:ss");
 
         //Đánh STT cho hàng tách món.
-        if(saleOrder.orderDetails[0] && saleOrder.orderDetails[0].detailID){
+        if (saleOrder.orderDetails[0] && saleOrder.orderDetails[0].detailID) {
             var stt = 1;
-            for(var x = 0; x < saleOrder.orderDetails.length; x ++){
-                if(!saleOrder.orderDetails[x].isChild){
+            for (var x = 0; x < saleOrder.orderDetails.length; x++) {
+                if (!saleOrder.orderDetails[x].isChild) {
                     saleOrder.orderDetails[x].sttTachMon = stt;
                     stt++;
                 }
-                else{
+                else {
                     saleOrder.orderDetails[x].sttTachMon = ' ';
                 }
             }
@@ -490,11 +490,11 @@ function printOrderInMobile(printer, saleOrder, type, setting) {
     };
     // console.log(data);
     window.Suno.printer_print(
-      data, function (message) {
-          console.log(message);
-      }, function (message) {
-          console.log(message);
-      });
+        data, function (message) {
+            console.log(message);
+        }, function (message) {
+            console.log(message);
+        });
 }
 
 function prepairOrderMobile(saleOrder, setting) {
@@ -532,19 +532,19 @@ function prepairOrderMobile(saleOrder, setting) {
 function initPrintTemplate(data, type) {
     if (type == 'BB') {
         var printTemplate = [
-          { text: data.storeName, format: 0, align: 0, size: 0 },
-          { text: data.storeAddress, format: 0, align: 0, size: 0 },
-          { text: data.storePhone, format: 0, align: 0, size: 0 },
-          { text: "PHIẾU IN BẾP", format: 0, align: 1, size: 0 },
-          { text: data.tableName, format: 0, align: 1, size: 0 },
-          { text: data.saleDateString, format: 0, align: 1, size: 0 },
-          { text: "Phục vụ: " + data.sellerName, format: 0, align: 0, size: 0 },
-          { text: "     SL     MÓN", format: 0, align: 0, size: 0 },
-          { text: "------------------------------------------", format: 0, align: 0, size: 0 }
+            { text: data.storeName, format: 0, align: 0, size: 0 },
+            { text: data.storeAddress, format: 0, align: 0, size: 0 },
+            { text: data.storePhone, format: 0, align: 0, size: 0 },
+            { text: "PHIẾU IN BẾP", format: 0, align: 1, size: 0 },
+            { text: data.tableName, format: 0, align: 1, size: 0 },
+            { text: data.saleDateString, format: 0, align: 1, size: 0 },
+            { text: "Phục vụ: " + data.sellerName, format: 0, align: 0, size: 0 },
+            { text: "     SL     MÓN", format: 0, align: 0, size: 0 },
+            { text: "------------------------------------------", format: 0, align: 0, size: 0 }
         ];
         for (var i = 0; i < data.orderDetails.length; i++) {
             printTemplate.push(
-              { text: '     ' + data.orderDetails[i].quantity + '     ' + data.orderDetails[i].itemName, format: 0, align: 0, size: 0 }
+                { text: '     ' + data.orderDetails[i].quantity + '     ' + data.orderDetails[i].itemName, format: 0, align: 0, size: 0 }
             );
             printTemplate.push({ text: '           Ghi chú: ' + data.orderDetails[i].comment, format: 0, align: 0, size: 0 })
 
@@ -555,23 +555,23 @@ function initPrintTemplate(data, type) {
         return printTemplate;
     } else if (type = 'TT') {
         var printTemplate = [
-          { text: data.storeName, format: 0, align: 0, size: 0 },
-          { text: data.storeAddress, format: 0, align: 0, size: 0 },
-          { text: data.storePhone, format: 0, align: 0, size: 0 },
-          { text: "HÓA ĐƠN BÁN HÀNG", format: 0, align: 1, size: 0 },
-          { text: data.saleOrderCode, format: 0, align: 1, size: 0 },
-          { text: "Thu ngân: " + data.cashierName, format: 0, align: 0, size: 0 },
-          { text: data.tableName, format: 0, align: 0, size: 0 },
-          { text: 'Giờ vào: ' + data.startTimeString, format: 0, align: 0, size: 0 },
-          { text: 'Giờ ra: ' + data.saleDateString, format: 0, align: 0, size: 0 },
-          { text: "------------------------------------------", format: 0, align: 0, size: 0 },
-          { text: "MÓN", format: 0, align: 0, size: 0 },
-          { text: "ĐƠN GIÁ                   SL    THÀNH TIỀN", format: 0, align: 0, size: 0 },
-          { text: "------------------------------------------", format: 0, align: 0, size: 0 }
+            { text: data.storeName, format: 0, align: 0, size: 0 },
+            { text: data.storeAddress, format: 0, align: 0, size: 0 },
+            { text: data.storePhone, format: 0, align: 0, size: 0 },
+            { text: "HÓA ĐƠN BÁN HÀNG", format: 0, align: 1, size: 0 },
+            { text: data.saleOrderCode, format: 0, align: 1, size: 0 },
+            { text: "Thu ngân: " + data.cashierName, format: 0, align: 0, size: 0 },
+            { text: data.tableName, format: 0, align: 0, size: 0 },
+            { text: 'Giờ vào: ' + data.startTimeString, format: 0, align: 0, size: 0 },
+            { text: 'Giờ ra: ' + data.saleDateString, format: 0, align: 0, size: 0 },
+            { text: "------------------------------------------", format: 0, align: 0, size: 0 },
+            { text: "MÓN", format: 0, align: 0, size: 0 },
+            { text: "ĐƠN GIÁ                   SL    THÀNH TIỀN", format: 0, align: 0, size: 0 },
+            { text: "------------------------------------------", format: 0, align: 0, size: 0 }
         ];
         for (var i = 0; i < data.orderDetails.length; i++) {
             printTemplate.push(
-              { text: data.orderDetails[i].itemName, format: 0, align: 0, size: 0 }
+                { text: data.orderDetails[i].itemName, format: 0, align: 0, size: 0 }
             );
             var txtDiscount = (data.orderDetails[i].discount > 0) ? '(đã giảm ' + filter(data.orderDetails[i].discount) + ')' : '';
             var txtPrice = addWhiteSpace(filter(data.orderDetails[i].sellPrice) + txtDiscount, 26);
@@ -618,7 +618,7 @@ function printReport(printer, data, setting) {
 }
 
 function checkOrderPrintStatus(saleOrder) {
-    for (var i = 0; i < saleOrder.orderDetails.length ; i++) {
+    for (var i = 0; i < saleOrder.orderDetails.length; i++) {
         if (saleOrder.orderDetails[i].newOrderCount > 0) {
             return true;
         }
@@ -1015,122 +1015,129 @@ function asynRequest($state, $http, method, url, headers, responseType, data, ca
         if (!http) return;
 
         http
-        .success(function (successResponse, status) {
-            var pos = checkArr.indexOf(requestId);
-            checkArr.splice(pos, 1);
-            if (callback !== null && typeof callback === 'function') {
-                callback(successResponse);
-                // if(checkLoader){checkLoader.setStatus(0)};
-            }
-        })
-        .error(function (errorResponse, status) {
-            //if (url === Api.ping) {
-            //    debugger;
-            //}
-            var pos = checkArr.indexOf(requestId);
-            checkArr.splice(pos, 1);
-            // console.log(errorResponse,status);
-            if (headers !== null) {
-                if (status == 401 && Mysuno.isContains(errorResponse.error_description, 'expired')) {
-                    // POSIM.RefreshToken($http, method, url, data, callback);
-                    //Token Hết hạn, đi lấy lại token
-                    //error = JSON.parse(JSON.stringify(errorResponse));
-                    //error.status = status;
-                    //errorCallback(error);
-                    //if($state){
-                    //  if(window.plugins){
-                    //    window.plugins.toast.showShortBottom('Phiên làm việc đã hết hạn!');
-                    //  }
+            .success(function (successResponse, status) {
+                var pos = checkArr.indexOf(requestId);
+                checkArr.splice(pos, 1);
+                if (callback !== null && typeof callback === 'function') {
+                    callback(successResponse);
+                    // if(checkLoader){checkLoader.setStatus(0)};
+                }
+            })
+            .error(function (errorResponse, status) {
+                //if (url === Api.ping) {
+                //    debugger;
+                //}
+                var pos = checkArr.indexOf(requestId);
+                checkArr.splice(pos, 1);
+                // console.log(errorResponse,status);
+                if (headers !== null) {
+                    if (status == 401 && Mysuno.isContains(errorResponse.error_description, 'expired')) {
+                        // POSIM.RefreshToken($http, method, url, data, callback);
+                        //Token Hết hạn, đi lấy lại token
+                        //error = JSON.parse(JSON.stringify(errorResponse));
+                        //error.status = status;
+                        //errorCallback(error);
+                        //if($state){
+                        //  if(window.plugins){
+                        //    window.plugins.toast.showShortBottom('Phiên làm việc đã hết hạn!');
+                        //  }
 
-                    //Lấy access Token mới nếu có cấu hình là refresh Token ở extConfig
-                    if (token != null && db != null) {
-                        var urlRefreshToken = Api.refreshToken + "&clientId=" + token.clientId + "&token=" + token.refreshToken;
-                        asynRequest($state, $http, 'GET', urlRefreshToken, false, 'json', null,
-                            function (d, status) {
-                                //Lưu token vào DB.
-                                token.token = d.accessToken;
-                                token.refreshToken = d.refreshToken;
-                                db.$getDocByID({ _id: 'token' })
-                                .then(function (d) {
-                                    if (d.docs.length > 0) {
-                                        d.docs[0].token.token = token.token;
-                                        d.docs[0].token.refreshToken = token.refreshToken;
-                                        return db.$addDoc(d.docs[0]);
-                                    }
-                                    return null;
-                                })
-                                .then(function (d) {
-                                    //console.log(d);
-                                    //Thực hiện lại action chưa thành công.
-                                    var headers = token.token;
-                                    asynRequest($state, $http, method, url, headers, responseType, data, callback, errorCallback, unique, requestId);
-                                })
-                                .catch(function (e) {
-                                    console.log(e);
+                        //Lấy access Token mới nếu có cấu hình là refresh Token ở extConfig
+                        if (token != null && db != null) {
+                            var urlRefreshToken = Api.refreshToken + "&clientId=" + token.clientId + "&token=" + token.refreshToken;
+                            asynRequest($state, $http, 'GET', urlRefreshToken, false, 'json', null,
+                                function (d, status) {
+                                    //Lưu token vào DB.
+                                    token.token = d.accessToken;
+                                    token.refreshToken = d.refreshToken;
+                                    db.$getDocByID({ _id: 'token' })
+                                        .then(function (d) {
+                                            if (d.docs.length > 0) {
+                                                d.docs[0].token.token = token.token;
+                                                d.docs[0].token.refreshToken = token.refreshToken;
+                                                return db.$addDoc(d.docs[0]);
+                                            }
+                                            return null;
+                                        })
+                                        .then(function (d) {
+                                            //console.log(d);
+                                            //Thực hiện lại action chưa thành công.
+                                            var headers = token.token;
+                                            asynRequest($state, $http, method, url, headers, responseType, data, callback, errorCallback, unique, requestId);
+                                        })
+                                        .catch(function (e) {
+                                            console.log(e);
+                                        });
+                                },
+                                function (e) {
+
                                 });
-                            },
-                            function (e) {
-
-                            });
-                    }
-                    else {
-                        var error = JSON.parse(JSON.stringify(errorResponse));
-                        error.status = status;
-                        errorCallback(error);
-                    }
-                }
-                else if (status == 401 && Mysuno.isContains(errorResponse.error_description, 'Missing access token')) {
-                    //Redirect to login page.
-                    if ($state) {
-                        if (window.plugins) {
-                            window.plugins.toast.showShortBottom('Phiên làm việc đã hết hạn!');
                         }
-                        $state.go('login', {}, { reload: true });
+                        else {
+                            var error = JSON.parse(JSON.stringify(errorResponse));
+                            error.status = status;
+                            errorCallback(error);
+                        }
                     }
+                    else if (status == 401 && Mysuno.isContains(errorResponse.error_description, 'Missing access token')) {
+                        //Redirect to login page.
+                        if ($state) {
+                            if (window.plugins) {
+                                window.plugins.toast.showShortBottom('Phiên làm việc đã hết hạn!');
+                            }
+                            $state.go('login', {}, { reload: true });
+                        }
 
-                }
-                else if (status == 500) {
-                    if (errorCallback !== null && typeof errorCallback === 'function') {
-                        errorCallback(errorResponse);
                     }
-                    //Redirect to error page.
-                    console.log('Redirect to error page');
-                }
-                else if (status === 0) {
-                    // if(window.plugins){
-                    //   window.plugins.toast.showShortBottom('Mất kết nối internet!');
-                    // }
-                    if (url == Api.getCompanyInfo) {
-                        return;
-                    }
-                    if (url == Api.ping) {
-                        var scope = angular.element(document.getElementById('SunoPosCafe')).scope();
-                        scope.isOnline = false;
+                    else if (status == 500) {
                         if (errorCallback !== null && typeof errorCallback === 'function') {
                             errorCallback(errorResponse);
                         }
-                        return;
+                        //Redirect to error page.
+                        console.log('Redirect to error page');
                     }
-
-                    if (reqConfig.method.toUpperCase() == "GET") {
-                        //Kiểm tra nếu bị lỗi expired refresh Token hoặc invalid refresh Token thì logout
-                        var scope = angular.element(document.getElementById('SunoPosCafe')).scope();
-                        if (scope.hasOwnProperty('isLoggedIn') && scope.isLoggedIn) {
-                            scope.logout();
+                    else if (status === 0) {
+                        // if(window.plugins){
+                        //   window.plugins.toast.showShortBottom('Mất kết nối internet!');
+                        // }
+                        if (url == Api.getCompanyInfo) {
+                            return;
                         }
+                        if (url == Api.ping) {
+                            var scope = angular.element(document.getElementById('SunoPosCafe')).scope();
+                            scope.isOnline = false;
+                            if (errorCallback !== null && typeof errorCallback === 'function') {
+                                errorCallback(errorResponse);
+                            }
+                            return;
+                        }
+
+                        if (reqConfig.method.toUpperCase() == "GET") {
+                            //Kiểm tra nếu bị lỗi expired refresh Token hoặc invalid refresh Token thì logout
+                            var scope = angular.element(document.getElementById('SunoPosCafe')).scope();
+                            if (scope.hasOwnProperty('isLoggedIn') && scope.isLoggedIn) {
+                                scope.logout();
+                            }
                             //Nếu không phải thì là trường hợp invalid username và password ngoài login view.
-                        else {
+                            else {
+                                scope.offline = {
+                                    status: true,
+                                    action: requestId
+                                };
+                            }
+                        } else if (reqConfig.method.toUpperCase() == "POST") {
+                            var scope = angular.element(document.getElementById('SunoPosCafe')).scope();
                             scope.offline = {
                                 status: true,
                                 action: requestId
                             };
                         }
-                    } else if (reqConfig.method.toUpperCase() == "POST") {
-                        var scope = angular.element(document.getElementById('SunoPosCafe')).scope();
-                        scope.offline = {
-                            status: true,
-                            action: requestId
-                        };
+                    }
+                    else {
+                        // if(checkLoader){checkLoader.setStatus(0)};
+                        if (errorCallback !== null && typeof errorCallback === 'function') {
+                            errorCallback(errorResponse);
+                        }
                     }
                 }
                 else {
@@ -1139,14 +1146,7 @@ function asynRequest($state, $http, method, url, headers, responseType, data, ca
                         errorCallback(errorResponse);
                     }
                 }
-            }
-            else {
-                // if(checkLoader){checkLoader.setStatus(0)};
-                if (errorCallback !== null && typeof errorCallback === 'function') {
-                    errorCallback(errorResponse);
-                }
-            }
-        })
+            })
         return;
     }
     // if(checkLoader){checkLoader.setStatus(0)};
@@ -1155,588 +1155,588 @@ function asynRequest($state, $http, method, url, headers, responseType, data, ca
 }
 
 angular.module('SunoPosCafe.controllers', ['SunoPosCafe.loginController', 'SunoPosCafe.posController'])
-.directive('ngEnter', function () {
-    return function (scope, element, attrs) {
-        element.bind("keypress", function (event) {
-            if (event.which === 13) {
-                scope.$apply(function () {
-                    scope.$eval(attrs.ngEnter, { 'event': event });
-                    scope.replyContent = null;
-                });
+    .directive('ngEnter', function () {
+        return function (scope, element, attrs) {
+            element.bind("keypress", function (event) {
+                if (event.which === 13) {
+                    scope.$apply(function () {
+                        scope.$eval(attrs.ngEnter, { 'event': event });
+                        scope.replyContent = null;
+                    });
 
-                event.preventDefault();
-            }
-        });
-    };
-})
+                    event.preventDefault();
+                }
+            });
+        };
+    })
 
-.directive('ngRepeatRange', ['$compile', function ($compile) {
-    return {
-        replace: true,
-        scope: false,
-
-        link: function (scope, element, attrs) {
-
-            // returns an array with the range of numbers
-            // you can use _.range instead if you use underscore
-            function range(from, to, step) {
-                var array = [];
-                while (from + step <= to)
-                    array[array.length] = from += step;
-
-                return array;
-            }
-
-            // prepare range options
-            var from = attrs.from || 0;
-            var step = attrs.step || 1;
-            var to = attrs.to || attrs.ngRepeatRange;
-
-            // get range of numbers, convert to the string and add ng-repeat
-            var rangeString = range(from, to, step).join(',');
-            angular.element(element).attr('ng-repeat', 'n in [' + rangeString + ']');
-            angular.element(element).removeAttr('ng-repeat-range');
-
-            $compile(element)(scope);
-        }
-    };
-}])
-
-.filter('zoneName', function () {
-    return function (zoneName, length) {
-        if (zoneName && zoneName.length > length) {
-            return zoneName.slice(0, length - 1) + "...";
-        }
-        return zoneName;
-    }
-})
-.filter('roundQuantityIfFloating', function () {
-    return function (quantity, radix) {
-        if (quantity % 1 === 0) {
-            return quantity;
-        }
-        if ((quantity * 10) % 1 === 0) {
-            return quantity.toFixed(1);
-        }
-        else {
-            return quantity.toFixed(radix);
-        }
-    }
-})
-.filter('convertMoneyFromNumberToWord', function(){
-    return function(money){
-        var result = "";
-        try{
-            result = DocTienBangChu(money);
-        }
-        catch(e){
-            result = money.toString();
-        }
-        return result;
-    }
-})
-.config(function ($httpProvider, $ionicConfigProvider) {
-    $ionicConfigProvider.form.checkbox('square');
-    $ionicConfigProvider.form.toggle('large');
-    $ionicConfigProvider.navBar.alignTitle('center');
-    $ionicConfigProvider.views.maxCache(5);
-    $httpProvider.interceptors.push(function ($rootScope, $q) {
+    .directive('ngRepeatRange', ['$compile', function ($compile) {
         return {
-            request: function (config) {
-                //console.log(config);
-                if (config.isSync === false) return config;
-                $rootScope.$broadcast('loading:show');
-                return config
-            },
-            response: function (response) {
-                $rootScope.$broadcast('loading:hide');
-                return response
-            },
-            requestError: function (rejection) {
-                $rootScope.$broadcast('loading:hide');
-                return $q.reject(rejection);
-            },
-            responseError: function (rejection) {
-                $rootScope.$broadcast('loading:hide');
-                return $q.reject(rejection);
+            replace: true,
+            scope: false,
+
+            link: function (scope, element, attrs) {
+
+                // returns an array with the range of numbers
+                // you can use _.range instead if you use underscore
+                function range(from, to, step) {
+                    var array = [];
+                    while (from + step <= to)
+                        array[array.length] = from += step;
+
+                    return array;
+                }
+
+                // prepare range options
+                var from = attrs.from || 0;
+                var step = attrs.step || 1;
+                var to = attrs.to || attrs.ngRepeatRange;
+
+                // get range of numbers, convert to the string and add ng-repeat
+                var rangeString = range(from, to, step).join(',');
+                angular.element(element).attr('ng-repeat', 'n in [' + rangeString + ']');
+                angular.element(element).removeAttr('ng-repeat-range');
+
+                $compile(element)(scope);
+            }
+        };
+    }])
+
+    .filter('zoneName', function () {
+        return function (zoneName, length) {
+            if (zoneName && zoneName.length > length) {
+                return zoneName.slice(0, length - 1) + "...";
+            }
+            return zoneName;
+        }
+    })
+    .filter('roundQuantityIfFloating', function () {
+        return function (quantity, radix) {
+            if (quantity % 1 === 0) {
+                return quantity;
+            }
+            if ((quantity * 10) % 1 === 0) {
+                return quantity.toFixed(1);
+            }
+            else {
+                return quantity.toFixed(radix);
             }
         }
     })
-})
-
-.run(function ($rootScope, $ionicLoading) {
-    $rootScope.$on('loading:show', function () {
-        $ionicLoading.show({
-            template: '<ion-spinner icon="ripple"></ion-spinner>',
-            noBackdrop: true
+    .filter('convertMoneyFromNumberToWord', function () {
+        return function (money) {
+            var result = "";
+            try {
+                result = DocTienBangChu(money);
+            }
+            catch (e) {
+                result = money.toString();
+            }
+            return result;
+        }
+    })
+    .config(function ($httpProvider, $ionicConfigProvider) {
+        $ionicConfigProvider.form.checkbox('square');
+        $ionicConfigProvider.form.toggle('large');
+        $ionicConfigProvider.navBar.alignTitle('center');
+        $ionicConfigProvider.views.maxCache(5);
+        $httpProvider.interceptors.push(function ($rootScope, $q) {
+            return {
+                request: function (config) {
+                    //console.log(config);
+                    if (config.isSync === false) return config;
+                    $rootScope.$broadcast('loading:show');
+                    return config
+                },
+                response: function (response) {
+                    $rootScope.$broadcast('loading:hide');
+                    return response
+                },
+                requestError: function (rejection) {
+                    $rootScope.$broadcast('loading:hide');
+                    return $q.reject(rejection);
+                },
+                responseError: function (rejection) {
+                    $rootScope.$broadcast('loading:hide');
+                    return $q.reject(rejection);
+                }
+            }
         })
     })
 
-    $rootScope.$on('loading:hide', function () {
-        $ionicLoading.hide();
-        // $ionicLoading.hide(3000)
+    .run(function ($rootScope, $ionicLoading) {
+        $rootScope.$on('loading:show', function () {
+            $ionicLoading.show({
+                template: '<ion-spinner icon="ripple"></ion-spinner>',
+                noBackdrop: true
+            })
+        })
+
+        $rootScope.$on('loading:hide', function () {
+            $ionicLoading.hide();
+            // $ionicLoading.hide(3000)
+        })
     })
-})
-.directive('ionicAutocomplete',
-  function ($ionicPopover) {
-      var popoverTemplate =
-        '<ion-popover-view style="margin-top:5px; width: 37%; height: 50%;">' +
-        '<ion-header-bar>' +
-        '<h1 class="title">Kết quả tìm kiếm</h1>' +
-        '</ion-header-bar>' +
-        '<ion-content>' +
-        '<div class="list">' +
-        '<a class="item" ng-repeat="item in items" ng-click="selectItem(item)">{{item[displayPropertyName]}}</a>' +
-        '</div>' +
-        '</ion-content>' +
-        '</ion-popover-view>';
-      return {
-          restrict: 'A',
-          scope: {
-              params: '=ionicAutocomplete',
-              inputSearch: '=ngModel'
-          },
-          link: function ($scope, $element, $attrs) {
-              var popoverShown = false;
-              var popover = null;
-              $scope.items = $scope.params.items;
-              $scope.displayPropertyName = $scope.params.displayPropertyName;
+    .directive('ionicAutocomplete',
+    function ($ionicPopover) {
+        var popoverTemplate =
+            '<ion-popover-view style="margin-top:5px; width: 37%; height: 50%;">' +
+            '<ion-header-bar>' +
+            '<h1 class="title">Kết quả tìm kiếm</h1>' +
+            '</ion-header-bar>' +
+            '<ion-content>' +
+            '<div class="list">' +
+            '<a class="item" ng-repeat="item in items" ng-click="selectItem(item)">{{item[displayPropertyName]}}</a>' +
+            '</div>' +
+            '</ion-content>' +
+            '</ion-popover-view>';
+        return {
+            restrict: 'A',
+            scope: {
+                params: '=ionicAutocomplete',
+                inputSearch: '=ngModel'
+            },
+            link: function ($scope, $element, $attrs) {
+                var popoverShown = false;
+                var popover = null;
+                $scope.items = $scope.params.items;
+                $scope.displayPropertyName = $scope.params.displayPropertyName;
 
-              //Add autocorrect="off" so the 'change' event is detected when user tap the keyboard
-              $element.attr('autocorrect', 'off');
+                //Add autocorrect="off" so the 'change' event is detected when user tap the keyboard
+                $element.attr('autocorrect', 'off');
 
-              $scope.createPopover = function () {
-                  popover = $ionicPopover.fromTemplate(popoverTemplate, {
-                      scope: $scope
-                  });
-              };
-              $scope.createPopover();
+                $scope.createPopover = function () {
+                    popover = $ionicPopover.fromTemplate(popoverTemplate, {
+                        scope: $scope
+                    });
+                };
+                $scope.createPopover();
 
-              $element.on('focus', function (e) {
-                  if (!popoverShown) {
-                      popover.show(e);
-                  }
-                  console.log($element[0].focus);
-                  $element[0].focus();
-              });
+                $element.on('focus', function (e) {
+                    if (!popoverShown) {
+                        popover.show(e);
+                    }
+                    console.log($element[0].focus);
+                    $element[0].focus();
+                });
 
-              $scope.selectItem = function (item) {
-                  $element.val(item[$scope.displayPropertyName]);
-                  popover.hide();
-                  $scope.params.onSelect(item);
-              };
-              $scope.$watch('params.items', function (newItems) {
-                  popover.remove();
-                  $scope.items = newItems;
-                  $scope.createPopover();
-              });
-          }
-      };
-  }
- )
-.filter('limitChar', function () {
-    return function (text, value) {
-        if (text) {
-            if (text.length > value) {
-                var text = text.slice(0, value - 3) + "...";
+                $scope.selectItem = function (item) {
+                    $element.val(item[$scope.displayPropertyName]);
+                    popover.hide();
+                    $scope.params.onSelect(item);
+                };
+                $scope.$watch('params.items', function (newItems) {
+                    popover.remove();
+                    $scope.items = newItems;
+                    $scope.createPopover();
+                });
+            }
+        };
+    }
+    )
+    .filter('limitChar', function () {
+        return function (text, value) {
+            if (text) {
+                if (text.length > value) {
+                    var text = text.slice(0, value - 3) + "...";
+                    return text;
+                }
                 return text;
             }
+            return null;
+        }
+    })
+    .filter('blankIfNullOrUndefined', function () {
+        return function (text) {
+            if (text == null || text == undefined) return '';
             return text;
         }
-        return null;
-    }
-})
-.filter('blankIfNullOrUndefined', function () {
-    return function (text) {
-        if (text == null || text == undefined) return '';
-        return text;
-    }
-})
-.service('utils', function () {
-    this.debounce = function (execution, wait, immediate) {
-        wait = 200;
-        if (!window.timeout) window.timeout = null;
-        return function () {
-            var later = function () {
-                window.timeout = null;
-                if (!immediate) {
+    })
+    .service('utils', function () {
+        this.debounce = function (execution, wait, immediate) {
+            wait = 200;
+            if (!window.timeout) window.timeout = null;
+            return function () {
+                var later = function () {
+                    window.timeout = null;
+                    if (!immediate) {
+                        execution();
+                    }
+                };
+                var callNow = immediate && !window.timeout;
+                clearTimeout(window.timeout);
+                window.timeout = setTimeout(later, wait || 200);
+                if (callNow) {
                     execution();
                 }
             };
-            var callNow = immediate && !window.timeout;
-            clearTimeout(window.timeout);
-            window.timeout = setTimeout(later, wait || 200);
-            if (callNow) {
-                execution();
-            }
         };
-    };
-})
+    })
 
-/* --- Made by justgoscha and licensed under MIT license --- */
+    /* --- Made by justgoscha and licensed under MIT license --- */
 
-.directive('autocomplete', ['$compile', '$ionicScrollDelegate', '$timeout', function ($compile, $ionicScrollDelegate, $timeout) {
-    var index = -1;
+    .directive('autocomplete', ['$compile', '$ionicScrollDelegate', '$timeout', function ($compile, $ionicScrollDelegate, $timeout) {
+        var index = -1;
 
-    var template = ['<div class="autocomplete {{attrs.class}}" ng-class="{\'autocomplete-result\' : (suggestions.length > 0 || searchParam), \'autocomplete-clear\': (suggestions.length == 0 || !searchParam || searchParam.length == 0)}" id="{{attrs.id}}>',
-                        '<span class="input-icon input-icon-right" style="width:100%;">',
-                            '<input type="text" ng-model="searchParam" placeholder="{{attrs.placeholder}}" class="{{attrs.inputclass}}" id="{{attrs.inputid}}" autocomplete="off" on-tap="onTap()" ng-blur="onBlur()" tabindex="1" />',
-                            //'<i class="icon-remove red" style="cursor:pointer;" ng-show="searchParam" ng-click="removeText()"></i>',
-                        '</span>',
-                        '<ion-scroll delegate-handle="searchItemsResult" class="orders-details" ng-show="!showOrderDiscount" ng-class="{\'ion-scroll-active\' : suggestions.length > 0, \'ion-scroll-anactive\' : (suggestions.length == 0 || !searchParam || searchParam.length == 0), \'android\' : isAndroid == true}">',
-                        //'<ion-scroll delegate-handle="searchItemsResult" class="orders-details">',
-                            '<ion-list class="orders-details" ng-show="completing">',
-                                '$AutocompleteTemplate$',
-                            '</ion-list>',
-                        '</ion-scroll>',
-                        '<ul class="no-result" ng-show="searchParam && (suggestions == null || suggestions.length == 0)"><li style="color: black;">Không tìm thấy kết quả phù hợp với: <span class="hidden-sm" style="font-weight: bold;">"{{ searchParam | limitChar:20 }}"</span></li></ul>',
-                    '</div>'];
+        var template = ['<div class="autocomplete {{attrs.class}}" ng-class="{\'autocomplete-result\' : (suggestions.length > 0 || searchParam), \'autocomplete-clear\': (suggestions.length == 0 || !searchParam || searchParam.length == 0)}" id="{{attrs.id}}>',
+            '<span class="input-icon input-icon-right" style="width:100%;">',
+            '<input type="text" ng-model="searchParam" placeholder="{{attrs.placeholder}}" class="{{attrs.inputclass}}" id="{{attrs.inputid}}" autocomplete="off" on-tap="onTap()" ng-blur="onBlur()" tabindex="1" />',
+            //'<i class="icon-remove red" style="cursor:pointer;" ng-show="searchParam" ng-click="removeText()"></i>',
+            '</span>',
+            '<ion-scroll delegate-handle="searchItemsResult" class="orders-details" ng-show="!showOrderDiscount" ng-class="{\'ion-scroll-active\' : suggestions.length > 0, \'ion-scroll-anactive\' : (suggestions.length == 0 || !searchParam || searchParam.length == 0), \'android\' : isAndroid == true}">',
+            //'<ion-scroll delegate-handle="searchItemsResult" class="orders-details">',
+            '<ion-list class="orders-details" ng-show="completing">',
+            '$AutocompleteTemplate$',
+            '</ion-list>',
+            '</ion-scroll>',
+            '<ul class="no-result" ng-show="searchParam && (suggestions == null || suggestions.length == 0)"><li style="color: black;">Không tìm thấy kết quả phù hợp với: <span class="hidden-sm" style="font-weight: bold;">"{{ searchParam | limitChar:20 }}"</span></li></ul>',
+            '</div>'];
 
-    return {
-        restrict: 'E',
-        scope: {
-            searchParam: '=ngModel',
-            suggestions: '=data',
-            onSearchField: '=onSearch',
-            onType: '=onType',
-            onSelect: '=onSelect',
-            onTap: '=onTap',
-            isAndroid: '=isAndroid' //Browser và iOS dropdownlist hiển thị giống nhau, chỉ cần điều chỉnh cho Android.
-        },
-        controller: ['$scope', '$element', '$attrs', '$timeout', function ($scope, $element, $attrs, $timeout) {
-            function $scopeApply() {
-                if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
-                    $scope.$apply();
-                }
-            }
-
-            // the index of the suggestions that's currently selected
-            $scope.selectedIndex = -1;
-
-            // set new index
-            $scope.setIndex = function (i) {
-                $scope.selectedIndex = parseInt(i);
-            };
-
-            this.setIndex = function (i) {
-                $scope.setIndex(i);
-                $scopeApply();
-            };
-
-            $scope.getIndex = function (i) {
-                return $scope.selectedIndex;
-            };
-
-            $scope.removeText = function () {
-                $scope.searchParam = '';
-            };
-
-            $scope.onBlur = function () {
-                $scope.onSearchField = false;
-            }
-
-            // watches if the parameter filter should be changed
-            var watching = true;
-
-            // autocompleting drop down on/off
-            $scope.completing = false; //false
-
-            // scanning from barcode scanner
-            $scope.scanning = false;
-            var typingPromise;
-            // starts autocompleting on typing in something
-            $scope.$watch("searchParam", function (newValue, oldValue) {
-                var delay = 300; //150;
-                //if ((oldValue == undefined || oldValue == '') && newValue) delay = 0;//scanning == true
-                if ((oldValue == undefined || oldValue == '') && newValue) { delay = 0; $scope.scanning = true; }//scanning == true
-                if (typingPromise) $timeout.cancel(typingPromise);//does nothing, if timeout already done
-                typingPromise = $timeout(function () {//Set timeout
-                    if (watching && $scope.searchParam) {
-                        $scope.completing = true;
-                        $scope.searchFilter = $scope.searchParam;
-                        $scope.selectedIndex = -1;
-                        $ionicScrollDelegate.$getByHandle('searchItemsResult')._instances[1].scrollTop(true);
-                    }
-                    if ($scope.searchParam && $scope.searchParam != '' && $scope.searchParam.length > 1) {
-                        // function thats passed to on-type attribute gets executed
-                        if ($scope.onType)
-                            $scope.onType($scope.searchParam);
-                    }
-                    else {
-                        $scope.completing = false; //false
-                        $scope.scanning = false;
-                    }
-                    if (newValue == '' && oldValue != '') {
+        return {
+            restrict: 'E',
+            scope: {
+                searchParam: '=ngModel',
+                suggestions: '=data',
+                onSearchField: '=onSearch',
+                onType: '=onType',
+                onSelect: '=onSelect',
+                onTap: '=onTap',
+                isAndroid: '=isAndroid' //Browser và iOS dropdownlist hiển thị giống nhau, chỉ cần điều chỉnh cho Android.
+            },
+            controller: ['$scope', '$element', '$attrs', '$timeout', function ($scope, $element, $attrs, $timeout) {
+                function $scopeApply() {
+                    if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
                         $scope.$apply();
                     }
-                }, delay);
-            });
-
-            var timeoutPromise;
-            // starts scanning after typing in something
-            $scope.$watch("suggestions", function () {
-                if (timeoutPromise) $timeout.cancel(timeoutPromise);  //does nothing, if timeout already done
-                timeoutPromise = $timeout(function () {   //Set timeout
-                    if ($scope.scanning === true && $scope.suggestions.length === 1) {
-                        //console.log('scanning promise:' + $scope.scanning);
-                        $scope.select($scope.suggestions[0]);
-                    }
-                    else if ($scope.scanning === true && $scope.suggestions.length >= 2 && $scope.suggestions.length <= 3) //
-                    {
-                        var existsKeywords = $scope.suggestions.filter(function (s) { return s.barcode.trim() === $scope.searchParam.trim(); });
-                        if (existsKeywords.length > 0) {
-                            $scope.select(existsKeywords[0]);
-                        }
-
-                    }
-                    $scope.scanning = false;
-                }, 200); //50
-            });
-
-            // for hovering over suggestions
-            this.preSelect = function (suggestion) {
-
-                watching = false;
-
-                // this line determines if it is shown
-                // in the input field before it's selected:
-                //$scope.searchParam = suggestion;
-
-                $scopeApply();
-                watching = true;
-
-            };
-
-            $scope.preSelect = this.preSelect;
-
-            this.preSelectOff = function () {
-                watching = true;
-            };
-
-            $scope.preSelectOff = this.preSelectOff;
-
-            // selecting a suggestion with RIGHT ARROW or ENTER
-            $scope.select = function (suggestion, isclearsearch) {
-                if (suggestion) {
-                    //$scope.searchParam = suggestion;
-                    //$scope.searchParam = isclearsearch == true ? '' : suggestion.Name;
-                    $scope.searchFilter = suggestion;
-                    if ($scope.onSelect) {
-                        $scope.onSelect(suggestion);
-                        $ionicScrollDelegate.$getByHandle('searchItemsResult')._instances[1].scrollTop(true);
-                    }
                 }
-                watching = false;
-                $scope.completing = false; //false
-                $scope.scanning = false;
-                setTimeout(function () { watching = true; }, 50); //150
-                $scope.setIndex(-1);
-                $scope.searchParam = '';
-                $scope.suggestions = [];
-            };
-        }],
-        link: function (scope, element, attrs) {
-            function $scopeApply() {
-                if (scope.$root.$$phase != '$apply' && scope.$root.$$phase != '$digest') {
-                    scope.$apply();
-                }
-            }
 
-            var attr = '';
+                // the index of the suggestions that's currently selected
+                $scope.selectedIndex = -1;
 
-            // Default atts
-            scope.attrs = {
-                "placeholder": "start typing...",
-                "class": "",
-                "id": "",
-                "inputclass": "",
-                "inputid": ""
-            };
-
-            for (var a in attrs) {
-                attr = a.replace('attr', '').toLowerCase();
-                // add attribute overriding defaults
-                // and preventing duplication
-                if (a.indexOf('attr') === 0) {
-                    scope.attrs[attr] = attrs[a];
-                }
-            }
-
-            if (attrs.clickActivation) {
-                element[0].onclick = function (e) {
-                    if (!scope.searchParam) {
-                        scope.completing = true;
-                        $scopeApply();
-                    }
+                // set new index
+                $scope.setIndex = function (i) {
+                    $scope.selectedIndex = parseInt(i);
                 };
-            }
 
-            var keyupFiredCount = 0;
-            function DelayExecution(f, delay) {
-                var timer = null;
-                return function () {
-                    var context = this, args = arguments;
-
-                    clearTimeout(timer);
-                    timer = window.setTimeout(function () {
-                        f.apply(context, args);
-                    },
-                    delay || 100);
-                };
-            }
-
-            var key = { left: 37, up: 38, right: 39, down: 40, enter: 13, esc: 27, space: 32 };
-
-            element[0].addEventListener("keyup", DelayExecution(function (e) {
-                keyupFiredCount = keyupFiredCount + 1;
-            }), true);
-
-            element[0].addEventListener("blur", function (e) {
-                keyupFiredCount = 0;
-                // disable suggestions on blur
-                // we do a timeout to prevent hiding it before a click event is registered
-                setTimeout(function () {
-                    scope.select();
-                    scope.setIndex(-1);
+                this.setIndex = function (i) {
+                    $scope.setIndex(i);
                     $scopeApply();
-                }, 300); //300
-            }, true);
+                };
 
-            element[0].addEventListener("keydown", function (e) {
-                var keycode = e.keyCode || e.which;
-                var l = angular.element(this).find('ion-item').length; //- 1;
+                $scope.getIndex = function (i) {
+                    return $scope.selectedIndex;
+                };
 
-                if (scope.searchParam === '') {
-                    keyupFiredCount = 0;
+                $scope.removeText = function () {
+                    $scope.searchParam = '';
+                };
+
+                $scope.onBlur = function () {
+                    $scope.onSearchField = false;
                 }
 
-                // implementation of the up and down movement in the list of suggestions
-                switch (keycode) {
-                    case key.up:
-                        index = scope.getIndex() - 1;
-                        if (index < 0) {
-                            index = 0;
-                        }
-                        else if (index > l - 1) {
-                            index = l - 1;
-                        }
-                        scope.setIndex(index);
+                // watches if the parameter filter should be changed
+                var watching = true;
 
-                        if (index !== -1) {
-                            scope.preSelect(angular.element(angular.element(this).find('ion-item')[index]).text());
-                            //var element = angular.element(this).find('li')[index];
-                            //var height = angular.element(element).height() + 10;
-                            var height = $(this).find('ion-item').height() + 10;
-                            var ul = angular.element(this).find('ion-list')[0];
-                            if (ul && height > 0 && index >= 0 && index < l - 1) { //ul.scrollTop = Math.max(ul.scrollTop - height, 0);
-                                $ionicScrollDelegate.$getByHandle('searchItemsResult')._instances[1].scrollBy(0, -height, true);
-                            }
-                        }
+                // autocompleting drop down on/off
+                $scope.completing = false; //false
 
-                        $scopeApply();
-
-                        break;
-                    case key.down:
-                        index = scope.getIndex() + 1;
-                        if (index < 0) {
-                            index = 0;
+                // scanning from barcode scanner
+                $scope.scanning = false;
+                var typingPromise;
+                // starts autocompleting on typing in something
+                $scope.$watch("searchParam", function (newValue, oldValue) {
+                    var delay = 300; //150;
+                    //if ((oldValue == undefined || oldValue == '') && newValue) delay = 0;//scanning == true
+                    if ((oldValue == undefined || oldValue == '') && newValue) { delay = 0; $scope.scanning = true; }//scanning == true
+                    if (typingPromise) $timeout.cancel(typingPromise);//does nothing, if timeout already done
+                    typingPromise = $timeout(function () {//Set timeout
+                        if (watching && $scope.searchParam) {
+                            $scope.completing = true;
+                            $scope.searchFilter = $scope.searchParam;
+                            $scope.selectedIndex = -1;
+                            $ionicScrollDelegate.$getByHandle('searchItemsResult')._instances[1].scrollTop(true);
                         }
-                        else if (index > l - 1) {
-                            index = l - 1;
-                        }
-                        scope.setIndex(index);
-
-                        if (index !== -1) {
-                            scope.preSelect(angular.element(angular.element(this).find('ion-item')[index]).text());
-                            //var height = angular.element(angular.element(this).find('li')[index]).height() + 10;
-                            var height = $(this).find('ion-item').height() + 10;
-                            var ul = angular.element(this).find('ion-list')[0];
-                            if (ul && height > 0 && index > 0 && index < l - 1) { //ul.scrollTop = Math.min(ul.scrollTop + height, height * l);
-                                $ionicScrollDelegate.$getByHandle('searchItemsResult')._instances[1].scrollBy(0, height, true);
-                            }
-                        }
-                        break;
-                    case key.left:
-                        break;
-                    case key.right:
-                    case key.enter:
-                        scope.scanning = false;
-                        index = scope.getIndex();
-                        //scope.preSelectOff();
-                        if (index !== -1) {
-                            //scope.select(scope.$eval(angular.element(angular.element(this).find('li')[index]).attr('val')), true);
-                            scope.select(scope.suggestions[index]);
+                        if ($scope.searchParam && $scope.searchParam != '' && $scope.searchParam.length > 1) {
+                            // function thats passed to on-type attribute gets executed
+                            if ($scope.onType)
+                                $scope.onType($scope.searchParam);
                         }
                         else {
-                            if (scope.suggestions.length === 1) {
-                                scope.select(scope.suggestions[0]);
-                                //console.log('scanning:' + scope.scanning + ' keyupFiredCount:' + keyupFiredCount);
-                                keyupFiredCount = 0;
-                            }
-                            else if ((keyupFiredCount <= 1) && (scope.searchParam && scope.searchParam !== '') && scope.searchParam.length >= 4) {
-                                scope.scanning = true;
-                                console.log('scanning:' + scope.scanning + ' keyupFiredCount:' + keyupFiredCount);
-                                keyupFiredCount = 0;
-                            }
+                            $scope.completing = false; //false
+                            $scope.scanning = false;
                         }
-                        scope.setIndex(-1);
-                        $scopeApply();
+                        if (newValue == '' && oldValue != '') {
+                            $scope.$apply();
+                        }
+                    }, delay);
+                });
 
-                        break;
-                    case key.space:
-                        index = scope.getIndex();
-                        break;
-                    case key.esc:
-                        // disable suggestions on escape
+                var timeoutPromise;
+                // starts scanning after typing in something
+                $scope.$watch("suggestions", function () {
+                    if (timeoutPromise) $timeout.cancel(timeoutPromise);  //does nothing, if timeout already done
+                    timeoutPromise = $timeout(function () {   //Set timeout
+                        if ($scope.scanning === true && $scope.suggestions.length === 1) {
+                            //console.log('scanning promise:' + $scope.scanning);
+                            $scope.select($scope.suggestions[0]);
+                        }
+                        else if ($scope.scanning === true && $scope.suggestions.length >= 2 && $scope.suggestions.length <= 3) //
+                        {
+                            var existsKeywords = $scope.suggestions.filter(function (s) { return s.barcode.trim() === $scope.searchParam.trim(); });
+                            if (existsKeywords.length > 0) {
+                                $scope.select(existsKeywords[0]);
+                            }
+
+                        }
+                        $scope.scanning = false;
+                    }, 200); //50
+                });
+
+                // for hovering over suggestions
+                this.preSelect = function (suggestion) {
+
+                    watching = false;
+
+                    // this line determines if it is shown
+                    // in the input field before it's selected:
+                    //$scope.searchParam = suggestion;
+
+                    $scopeApply();
+                    watching = true;
+
+                };
+
+                $scope.preSelect = this.preSelect;
+
+                this.preSelectOff = function () {
+                    watching = true;
+                };
+
+                $scope.preSelectOff = this.preSelectOff;
+
+                // selecting a suggestion with RIGHT ARROW or ENTER
+                $scope.select = function (suggestion, isclearsearch) {
+                    if (suggestion) {
+                        //$scope.searchParam = suggestion;
+                        //$scope.searchParam = isclearsearch == true ? '' : suggestion.Name;
+                        $scope.searchFilter = suggestion;
+                        if ($scope.onSelect) {
+                            $scope.onSelect(suggestion);
+                            $ionicScrollDelegate.$getByHandle('searchItemsResult')._instances[1].scrollTop(true);
+                        }
+                    }
+                    watching = false;
+                    $scope.completing = false; //false
+                    $scope.scanning = false;
+                    setTimeout(function () { watching = true; }, 50); //150
+                    $scope.setIndex(-1);
+                    $scope.searchParam = '';
+                    $scope.suggestions = [];
+                };
+            }],
+            link: function (scope, element, attrs) {
+                function $scopeApply() {
+                    if (scope.$root.$$phase != '$apply' && scope.$root.$$phase != '$digest') {
+                        scope.$apply();
+                    }
+                }
+
+                var attr = '';
+
+                // Default atts
+                scope.attrs = {
+                    "placeholder": "start typing...",
+                    "class": "",
+                    "id": "",
+                    "inputclass": "",
+                    "inputid": ""
+                };
+
+                for (var a in attrs) {
+                    attr = a.replace('attr', '').toLowerCase();
+                    // add attribute overriding defaults
+                    // and preventing duplication
+                    if (a.indexOf('attr') === 0) {
+                        scope.attrs[attr] = attrs[a];
+                    }
+                }
+
+                if (attrs.clickActivation) {
+                    element[0].onclick = function (e) {
+                        if (!scope.searchParam) {
+                            scope.completing = true;
+                            $scopeApply();
+                        }
+                    };
+                }
+
+                var keyupFiredCount = 0;
+                function DelayExecution(f, delay) {
+                    var timer = null;
+                    return function () {
+                        var context = this, args = arguments;
+
+                        clearTimeout(timer);
+                        timer = window.setTimeout(function () {
+                            f.apply(context, args);
+                        },
+                            delay || 100);
+                    };
+                }
+
+                var key = { left: 37, up: 38, right: 39, down: 40, enter: 13, esc: 27, space: 32 };
+
+                element[0].addEventListener("keyup", DelayExecution(function (e) {
+                    keyupFiredCount = keyupFiredCount + 1;
+                }), true);
+
+                element[0].addEventListener("blur", function (e) {
+                    keyupFiredCount = 0;
+                    // disable suggestions on blur
+                    // we do a timeout to prevent hiding it before a click event is registered
+                    setTimeout(function () {
                         scope.select();
                         scope.setIndex(-1);
                         $scopeApply();
+                    }, 300); //300
+                }, true);
+
+                element[0].addEventListener("keydown", function (e) {
+                    var keycode = e.keyCode || e.which;
+                    var l = angular.element(this).find('ion-item').length; //- 1;
+
+                    if (scope.searchParam === '') {
+                        keyupFiredCount = 0;
+                    }
+
+                    // implementation of the up and down movement in the list of suggestions
+                    switch (keycode) {
+                        case key.up:
+                            index = scope.getIndex() - 1;
+                            if (index < 0) {
+                                index = 0;
+                            }
+                            else if (index > l - 1) {
+                                index = l - 1;
+                            }
+                            scope.setIndex(index);
+
+                            if (index !== -1) {
+                                scope.preSelect(angular.element(angular.element(this).find('ion-item')[index]).text());
+                                //var element = angular.element(this).find('li')[index];
+                                //var height = angular.element(element).height() + 10;
+                                var height = $(this).find('ion-item').height() + 10;
+                                var ul = angular.element(this).find('ion-list')[0];
+                                if (ul && height > 0 && index >= 0 && index < l - 1) { //ul.scrollTop = Math.max(ul.scrollTop - height, 0);
+                                    $ionicScrollDelegate.$getByHandle('searchItemsResult')._instances[1].scrollBy(0, -height, true);
+                                }
+                            }
+
+                            $scopeApply();
+
+                            break;
+                        case key.down:
+                            index = scope.getIndex() + 1;
+                            if (index < 0) {
+                                index = 0;
+                            }
+                            else if (index > l - 1) {
+                                index = l - 1;
+                            }
+                            scope.setIndex(index);
+
+                            if (index !== -1) {
+                                scope.preSelect(angular.element(angular.element(this).find('ion-item')[index]).text());
+                                //var height = angular.element(angular.element(this).find('li')[index]).height() + 10;
+                                var height = $(this).find('ion-item').height() + 10;
+                                var ul = angular.element(this).find('ion-list')[0];
+                                if (ul && height > 0 && index > 0 && index < l - 1) { //ul.scrollTop = Math.min(ul.scrollTop + height, height * l);
+                                    $ionicScrollDelegate.$getByHandle('searchItemsResult')._instances[1].scrollBy(0, height, true);
+                                }
+                            }
+                            break;
+                        case key.left:
+                            break;
+                        case key.right:
+                        case key.enter:
+                            scope.scanning = false;
+                            index = scope.getIndex();
+                            //scope.preSelectOff();
+                            if (index !== -1) {
+                                //scope.select(scope.$eval(angular.element(angular.element(this).find('li')[index]).attr('val')), true);
+                                scope.select(scope.suggestions[index]);
+                            }
+                            else {
+                                if (scope.suggestions.length === 1) {
+                                    scope.select(scope.suggestions[0]);
+                                    //console.log('scanning:' + scope.scanning + ' keyupFiredCount:' + keyupFiredCount);
+                                    keyupFiredCount = 0;
+                                }
+                                else if ((keyupFiredCount <= 1) && (scope.searchParam && scope.searchParam !== '') && scope.searchParam.length >= 4) {
+                                    scope.scanning = true;
+                                    console.log('scanning:' + scope.scanning + ' keyupFiredCount:' + keyupFiredCount);
+                                    keyupFiredCount = 0;
+                                }
+                            }
+                            scope.setIndex(-1);
+                            $scopeApply();
+
+                            break;
+                        case key.space:
+                            index = scope.getIndex();
+                            break;
+                        case key.esc:
+                            // disable suggestions on escape
+                            scope.select();
+                            scope.setIndex(-1);
+                            $scopeApply();
+                            e.preventDefault();
+                            break;
+                        default:
+                            return;
+                    }
+
+                    if (scope.getIndex() !== -1 || keycode == key.enter)
                         e.preventDefault();
-                        break;
-                    default:
-                        return;
+                });
+
+                var itemTemplate = $('#' + attrs.templateId).text();
+                var arrTemplate = [];
+                for (var i = 0; i < template.length; i++) {
+                    if (template[i] === '$AutocompleteTemplate$') {
+                        arrTemplate.push(itemTemplate);
+                    }
+                    else {
+                        arrTemplate.push(template[i]);
+                    }
                 }
 
-                if (scope.getIndex() !== -1 || keycode == key.enter)
-                    e.preventDefault();
-            });
-
-            var itemTemplate = $('#' + attrs.templateId).text();
-            var arrTemplate = [];
-            for (var i = 0; i < template.length; i++) {
-                if (template[i] === '$AutocompleteTemplate$') {
-                    arrTemplate.push(itemTemplate);
-                }
-                else {
-                    arrTemplate.push(template[i]);
-                }
+                //Compile Template
+                element.append($compile(arrTemplate.join(''))(scope));
+                //Focus Textbox
+                //angular.element(element).find('input[type="text"]')[0].focus();
             }
+            //templateUrl: ''
+        };
+    }])
 
-            //Compile Template
-            element.append($compile(arrTemplate.join(''))(scope));
-            //Focus Textbox
-            //angular.element(element).find('input[type="text"]')[0].focus();
-        }
-        //templateUrl: ''
-    };
-}])
+    .directive('suggestion', function () {
+        return {
+            restrict: 'A',
+            require: '^autocomplete', // ^look for controller on parents element
+            link: function (scope, element, attrs, autoCtrl) {
+                element.bind('mouseenter', function () {
+                    autoCtrl.preSelect(attrs.val);
+                    autoCtrl.setIndex(attrs.index);
+                });
 
-.directive('suggestion', function () {
-    return {
-        restrict: 'A',
-        require: '^autocomplete', // ^look for controller on parents element
-        link: function (scope, element, attrs, autoCtrl) {
-            element.bind('mouseenter', function () {
-                autoCtrl.preSelect(attrs.val);
-                autoCtrl.setIndex(attrs.index);
-            });
-
-            element.bind('mouseleave', function () {
-                autoCtrl.preSelectOff();
-            });
-        }
-    };
-});
+                element.bind('mouseleave', function () {
+                    autoCtrl.preSelectOff();
+                });
+            }
+        };
+    });
 
 var clearBlankOrder = function (tables) {
     var tbLength = tables.length;
@@ -1904,6 +1904,14 @@ var isBrandNewOrder = function (order) {
     return false;
 }
 
+var isRemovedOrCompletedOrReplacedOrder = function (order, orderHisLog) {
+    var index = orderHisLog.findIndex(function (saleOrderUuid) {
+        return saleOrderUuid === order.saleOrder.saleOrderUuid;
+    });
+    var isInvalid = index !== -1;
+    return isInvalid;
+}
+
 var isUnnoticeOrder = function (order) {
     for (var x = 0; x < order.saleOrder.orderDetails.length; x++) {
         if (order.saleOrder.orderDetails.newOrderCount > 0) {
@@ -1929,49 +1937,69 @@ var updateUnnoticeItemForOrder = function (orderServer, orderLocal) {
     for (var x = 0; x < orderLocal.saleOrder.orderDetails.length; x++) {
         //Nếu item đó có món chưa báo bếp
         //if (orderLocal.saleOrder.orderDetails[x].newOrderCount > 0 || orderLocal.saleOrder.orderDetails[x].isServiceItem) {
-            //Cập nhật cho hàng bình thường
-            if (!orderLocal.saleOrder.orderDetails[x].detailID) {
-                var item = orderServer.saleOrder.orderDetails.find(function (d) { return d.itemId == orderLocal.saleOrder.orderDetails[x].itemId; });
-                if (item) {
-                    item.quantity += orderLocal.saleOrder.orderDetails[x].newOrderCount;
-                    item.newOrderCount = orderLocal.saleOrder.orderDetails[x].newOrderCount;
-                    //Cập nhật các thiết lập khác chưa đồng bộ
-                    var props = ['discount', 'discountPercent', 'isDiscountPercent', 'unitPrice', 'sellPrice', 'subTotal'];
-                    ////Cập nhật cho hàng tính giờ.
-                    //if (item.isServiceItem) {
-                    //    props.push('endTime', 'timeCounter', 'duration', 'blockCount', 'timer', 'startTime');
-                    //}
-                    updateProperties(orderLocal.saleOrder.orderDetails[x], item, props);
-                }
-                else {
-                    var item = angular.copy(orderLocal.saleOrder.orderDetails[x]);
-                    item.quantity = orderLocal.saleOrder.orderDetails[x].newOrderCount;
-                    orderServer.saleOrder.orderDetails.push(item);
-                }
+        //Cập nhật cho hàng bình thường
+        if (!orderLocal.saleOrder.orderDetails[x].detailID) {
+            var item = orderServer.saleOrder.orderDetails.find(function (d) { return d.itemId == orderLocal.saleOrder.orderDetails[x].itemId; });
+            if (item) {
+                item.quantity += orderLocal.saleOrder.orderDetails[x].newOrderCount;
+                item.newOrderCount = orderLocal.saleOrder.orderDetails[x].newOrderCount;
+                //Cập nhật các thiết lập khác chưa đồng bộ
+                var props = ['discount', 'discountPercent', 'isDiscountPercent', 'unitPrice', 'sellPrice', 'subTotal'];
+                ////Cập nhật cho hàng tính giờ.
+                //if (item.isServiceItem) {
+                //    props.push('endTime', 'timeCounter', 'duration', 'blockCount', 'timer', 'startTime');
+                //}
+                updateProperties(orderLocal.saleOrder.orderDetails[x], item, props);
             }
-                //Cập nhật cho hàng tách món
             else {
-                var item = orderServer.saleOrder.orderDetails.find(function (d) { return d.itemId == orderLocal.saleOrder.orderDetails[x].itemId && d.detailID == orderLocal.saleOrder.orderDetails[x].detailID; });
-                if (item) {
-                    item.quantity += orderLocal.saleOrder.orderDetails[x].newOrderCount;
-                    item.newOrderCount = orderLocal.saleOrder.orderDetails[x].newOrderCount;
-                    //Cập nhật các thiết lập khác chưa đồng bộ
-                    var props = ['discount', 'discountPercent', 'isDiscountPercent', 'unitPrice', 'sellPrice', 'subTotal'];
-                    ////Cập nhật cho hàng tính giờ.
-                    //if (item.isServiceItem) {
-                    //    props.push('endTime', 'timeCounter', 'duration', 'blockCount', 'timer', 'startTime');
-                    //}
-                    updateProperties(orderLocal.saleOrder.orderDetails[x], item, props);
-                }
-                else {
-                    orderServer.saleOrder.orderDetails.push(angular.copy(orderLocal.saleOrder.orderDetails[x]));
-                }
+                var item = angular.copy(orderLocal.saleOrder.orderDetails[x]);
+                item.quantity = orderLocal.saleOrder.orderDetails[x].newOrderCount;
+                orderServer.saleOrder.orderDetails.push(item);
             }
+        }
+        //Cập nhật cho hàng tách món
+        else {
+            var item = orderServer.saleOrder.orderDetails.find(function (d) { return d.itemId == orderLocal.saleOrder.orderDetails[x].itemId && d.detailID == orderLocal.saleOrder.orderDetails[x].detailID; });
+            if (item) {
+                item.quantity += orderLocal.saleOrder.orderDetails[x].newOrderCount;
+                item.newOrderCount = orderLocal.saleOrder.orderDetails[x].newOrderCount;
+                //Cập nhật các thiết lập khác chưa đồng bộ
+                var props = ['discount', 'discountPercent', 'isDiscountPercent', 'unitPrice', 'sellPrice', 'subTotal'];
+                ////Cập nhật cho hàng tính giờ.
+                //if (item.isServiceItem) {
+                //    props.push('endTime', 'timeCounter', 'duration', 'blockCount', 'timer', 'startTime');
+                //}
+                updateProperties(orderLocal.saleOrder.orderDetails[x], item, props);
+            }
+            else {
+                orderServer.saleOrder.orderDetails.push(angular.copy(orderLocal.saleOrder.orderDetails[x]));
+            }
+        }
         //}
     }
 }
 
-var replaceOrder = function (serverTables, localTables, isUngroupItem) {
+var getPromiseState = function (promise, callback) {
+    // Symbols and RegExps are never content-equal
+    var uniqueValue = window['Symbol'] ? Symbol('unique') : /unique/
+
+    function notifyPendingOrResolved(value) {
+        if (value === uniqueValue) {
+            return callback('pending')
+        } else {
+            return callback('fulfilled')
+        }
+    }
+
+    function notifyRejected(reason) {
+        return callback('rejected')
+    }
+
+    var race = [promise, Promise.resolve(uniqueValue)]
+    Promise.race(race).then(notifyPendingOrResolved, notifyRejected)
+}
+
+var replaceOrder = function (serverTables, localTables, isUngroupItem, orderHisLog) {
     var localLength = localTables.length;
     //Lặp qua từng bàn trong local
     for (var x = 0; x < localLength; x++) {
@@ -2012,6 +2040,9 @@ var replaceOrder = function (serverTables, localTables, isUngroupItem) {
                             table.tableOrder.splice(index, 1);
                         }
                     }
+                    // else if (!isRemovedOrCompletedOrReplacedOrder(orderLocal, orderHisLog)) {
+                    //     table.tableOrder.push(angular.copy(orderLocal));
+                    // }
                     else {
                         //Order cũ đã bị thanh toán, chuyển ghép xóa, hoặc xóa thì ko cần thêm vào, cũng ko cần thực hiện gì cả.
                     }
@@ -2026,144 +2057,122 @@ var replaceOrder = function (serverTables, localTables, isUngroupItem) {
 
 //Convert số dang chữ. Tham khảo trên mạng.
 
-var ChuSo=new Array(" không "," một "," hai "," ba "," bốn "," năm "," sáu "," bảy "," tám "," chín ");
-var Tien=new Array( "", " nghìn", " triệu", " tỷ", " nghìn tỷ", " triệu tỷ");
+var ChuSo = new Array(" không ", " một ", " hai ", " ba ", " bốn ", " năm ", " sáu ", " bảy ", " tám ", " chín ");
+var Tien = new Array("", " nghìn", " triệu", " tỷ", " nghìn tỷ", " triệu tỷ");
 
 //1. Hàm đọc số có ba chữ số;
-function DocSo3ChuSo(baso)
-{
+function DocSo3ChuSo(baso) {
     var tram;
     var chuc;
     var donvi;
-    var KetQua="";
-    tram=parseInt(baso/100);
-    chuc=parseInt((baso%100)/10);
-    donvi=baso%10;
-    if(tram==0 && chuc==0 && donvi==0) return "";
-    if(tram!=0)
-    {
+    var KetQua = "";
+    tram = parseInt(baso / 100);
+    chuc = parseInt((baso % 100) / 10);
+    donvi = baso % 10;
+    if (tram == 0 && chuc == 0 && donvi == 0) return "";
+    if (tram != 0) {
         KetQua += ChuSo[tram] + " trăm ";
         if ((chuc == 0) && (donvi != 0)) KetQua += " lẻ ";
     }
-    if ((chuc != 0) && (chuc != 1))
-    {
-            KetQua += ChuSo[chuc] + " mươi";
-            if ((chuc == 0) && (donvi != 0)) KetQua = KetQua + " lẻ ";
+    if ((chuc != 0) && (chuc != 1)) {
+        KetQua += ChuSo[chuc] + " mươi";
+        if ((chuc == 0) && (donvi != 0)) KetQua = KetQua + " lẻ ";
     }
     if (chuc == 1) KetQua += " mười ";
-    switch (donvi)
-    {
+    switch (donvi) {
         case 1:
-            if ((chuc != 0) && (chuc != 1))
-            {
+            if ((chuc != 0) && (chuc != 1)) {
                 KetQua += " mốt ";
             }
-            else
-            {
+            else {
                 KetQua += ChuSo[donvi];
             }
             break;
         case 5:
-            if (chuc == 0)
-            {
+            if (chuc == 0) {
                 KetQua += ChuSo[donvi];
             }
-            else
-            {
+            else {
                 KetQua += " lăm ";
             }
             break;
         default:
-            if (donvi != 0)
-            {
+            if (donvi != 0) {
                 KetQua += ChuSo[donvi];
             }
             break;
-        }
+    }
     return KetQua;
 }
 
 //2. Hàm đọc số thành chữ (Sử dụng hàm đọc số có ba chữ số)
-
-function DocTienBangChu(SoTien)
-{
-    var lan=0;
-    var i=0;
-    var so=0;
-    var KetQua="";
-    var tmp="";
+function DocTienBangChu(SoTien) {
+    var lan = 0;
+    var i = 0;
+    var so = 0;
+    var KetQua = "";
+    var tmp = "";
     var ViTri = new Array();
-    if(SoTien<0) return "Số tiền âm !";
-    if(SoTien==0) return "Không đồng";
-    if(SoTien>0)
-    {
-        so=SoTien;
+    if (SoTien < 0) return "Số tiền âm !";
+    if (SoTien == 0) return "Không đồng";
+    if (SoTien > 0) {
+        so = SoTien;
     }
-    else
-    {
+    else {
         so = -SoTien;
     }
-    if (SoTien > 8999999999999999)
-    {
+    if (SoTien > 8999999999999999) {
         //SoTien = 0;
         return " ";
     }
     ViTri[5] = Math.floor(so / 1000000000000000);
-    if(isNaN(ViTri[5]))
+    if (isNaN(ViTri[5]))
         ViTri[5] = "0";
     so = so - parseFloat(ViTri[5].toString()) * 1000000000000000;
     ViTri[4] = Math.floor(so / 1000000000000);
-     if(isNaN(ViTri[4]))
+    if (isNaN(ViTri[4]))
         ViTri[4] = "0";
     so = so - parseFloat(ViTri[4].toString()) * 1000000000000;
     ViTri[3] = Math.floor(so / 1000000000);
-     if(isNaN(ViTri[3]))
+    if (isNaN(ViTri[3]))
         ViTri[3] = "0";
     so = so - parseFloat(ViTri[3].toString()) * 1000000000;
     ViTri[2] = parseInt(so / 1000000);
-     if(isNaN(ViTri[2]))
+    if (isNaN(ViTri[2]))
         ViTri[2] = "0";
     ViTri[1] = parseInt((so % 1000000) / 1000);
-     if(isNaN(ViTri[1]))
+    if (isNaN(ViTri[1]))
         ViTri[1] = "0";
     ViTri[0] = parseInt(so % 1000);
-  if(isNaN(ViTri[0]))
+    if (isNaN(ViTri[0]))
         ViTri[0] = "0";
-    if (ViTri[5] > 0)
-    {
+    if (ViTri[5] > 0) {
         lan = 5;
     }
-    else if (ViTri[4] > 0)
-    {
+    else if (ViTri[4] > 0) {
         lan = 4;
     }
-    else if (ViTri[3] > 0)
-    {
+    else if (ViTri[3] > 0) {
         lan = 3;
     }
-    else if (ViTri[2] > 0)
-    {
+    else if (ViTri[2] > 0) {
         lan = 2;
     }
-    else if (ViTri[1] > 0)
-    {
+    else if (ViTri[1] > 0) {
         lan = 1;
     }
-    else
-    {
+    else {
         lan = 0;
     }
-    for (i = lan; i >= 0; i--)
-    {
-       tmp = DocSo3ChuSo(ViTri[i]);
-       KetQua += tmp;
-       if (ViTri[i] > 0) KetQua += Tien[i];
-       if ((i > 0) && (tmp.length > 0)) KetQua += ' ';//&& (!string.IsNullOrEmpty(tmp))
+    for (i = lan; i >= 0; i--) {
+        tmp = DocSo3ChuSo(ViTri[i]);
+        KetQua += tmp;
+        if (ViTri[i] > 0) KetQua += Tien[i];
+        if ((i > 0) && (tmp.length > 0)) KetQua += ' ';//&& (!string.IsNullOrEmpty(tmp))
     }
-   if (KetQua.substring(KetQua.length - 1) == ' ')
-   {
+    if (KetQua.substring(KetQua.length - 1) == ' ') {
         KetQua = KetQua.substring(0, KetQua.length - 1);
-   }
-   KetQua = KetQua.substring(1,2).toUpperCase()+ KetQua.substring(2);
-   return KetQua;//.substring(0, 1);//.toUpperCase();// + KetQua.substring(1);
+    }
+    KetQua = KetQua.substring(1, 2).toUpperCase() + KetQua.substring(2);
+    return KetQua;//.substring(0, 1);//.toUpperCase();// + KetQua.substring(1);
 }
